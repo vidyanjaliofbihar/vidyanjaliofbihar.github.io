@@ -1,11 +1,12 @@
-<!doctype html>
+<!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="Vidyanjali of Bihar — Transformation through Education. Working towards quality education, stronger schools, empowered teachers and social upliftment.">
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="Vidyanjali of Bihar — Transformation through Education. Working towards quality education, stronger schools, empowered teachers and social upliftment." name="description"/>
 <title>Vidyanjali of Bihar | Transformation through Education</title>
-<link rel="icon" type="image/jpeg" href="ngo-logo.jpg">
+<link href="ngo-logo.jpg" rel="icon" type="image/jpeg"/>
 <style>
 :root{--navy:#142D50;--blue:#24527a;--gold:#C9A34E;--ink:#18324d;--muted:#53677b;--pale:#f4f8fc;--white:#fff}
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;font-family:Arial,Helvetica,sans-serif;color:var(--ink);line-height:1.6}a{color:inherit;text-decoration:none}.wrap{width:min(1160px,92%);margin:auto}
@@ -24,98 +25,130 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 @media(max-width:900px){nav{display:none;position:absolute;top:72px;left:0;right:0;background:white;padding:18px 5%;flex-direction:column;align-items:flex-start;box-shadow:0 10px 15px #0001}nav.open{display:flex}.menu{display:block}.nav>.btn{display:none}.four{grid-template-columns:repeat(2,1fr)}.three{grid-template-columns:1fr 1fr}.about-grid{grid-template-columns:1fr}}
 @media(max-width:900px){.hero .wrap{grid-template-columns:1fr}.slide-frame{height:360px}}
 @media(max-width:560px){.four,.three,.contact-grid{grid-template-columns:1fr}.hero .wrap{grid-template-columns:1fr;padding:38px 0;gap:22px}.slide-frame{height:280px}.hero p{font-size:15px}section{padding:48px 0}.brand small{font-size:10px}.logo{width:48px;height:48px}}
+
+@media(max-width:560px){#vision-mission .grid{grid-template-columns:1fr!important}}
 </style>
 </head>
 <body>
 <header>
- <div class="wrap nav">
-  <a class="brand" href="#home" aria-label="Vidyanjali of Bihar home"><img class="logo" src="ngo-logo.jpg" alt="Vidyanjali of Bihar official logo"><span>Vidyanjali of Bihar<small>Transformation through Education</small></span></a>
-  <button class="menu" aria-label="Open navigation" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
-  <nav>
-   <a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
-  </nav>
-  <a class="btn blue" href="#contact">Get in Touch</a>
- </div>
+<div class="wrap nav">
+<a aria-label="Vidyanjali of Bihar home" class="brand" href="#home"><img alt="Vidyanjali of Bihar official logo" class="logo" src="ngo-logo.jpg"/><span>Vidyanjali of Bihar<small>Transformation through Education</small></span></a>
+<button aria-label="Open navigation" class="menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
+<nav>
+<a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
+</nav>
+<a class="btn blue" href="#contact">Get in Touch</a>
+</div>
 </header>
 <main>
 <section class="hero" id="home">
- <div class="wrap"><div class="hero-copy">
-  <div class="eyebrow">Welcome to</div>
-  <h1>Vidyanjali <span>of Bihar</span></h1>
-  <div class="tagline">Transformation through Education</div>
-  <p>Empowering schools, inspiring teachers and transforming communities through education.</p>
-  <a class="btn" href="#programs">Explore Our Programs →</a>
- </div>
- <div class="hero-photo" aria-label="Photographs from Vidyanjali of Bihar educational programs">
-  <div class="slide-frame" id="slide-frame">
-   <img class="slide active" src="leadership-participants.jpg" alt="Participants at the School Leadership Program 2026" fetchpriority="high">
-   <img class="slide" src="teacher-workshop.jpg" alt="Speaker at the teacher training workshop" loading="lazy">
-   <img class="slide" src="workshop-banner.jpg" alt="Vidyanjali of Bihar teacher training workshop banner" loading="lazy">
-   <div class="slide-caption" id="slide-caption" aria-live="polite">School Leadership Program 2026</div>
-  </div>
-  <div class="slide-controls" aria-label="Photo slideshow controls">
-   <button type="button" id="prev-slide" aria-label="Previous photograph">‹</button>
-   <button type="button" class="dot active" data-slide="0" aria-label="Show photograph 1" aria-pressed="true"></button>
-   <button type="button" class="dot" data-slide="1" aria-label="Show photograph 2" aria-pressed="false"></button>
-   <button type="button" class="dot" data-slide="2" aria-label="Show photograph 3" aria-pressed="false"></button>
-   <button type="button" id="next-slide" aria-label="Next photograph">›</button>
-   <button type="button" id="toggle-slide" aria-label="Pause slideshow">Ⅱ</button>
-  </div>
- </div></div>
+<div class="wrap"><div class="hero-copy">
+<div class="eyebrow">Welcome to</div>
+<h1>Vidyanjali <span>of Bihar</span></h1>
+<div class="tagline">Transformation through Education</div>
+<p>Empowering schools, inspiring teachers and transforming communities through education.</p>
+<a class="btn" href="#programs">Explore Our Programs →</a>
+</div>
+<div aria-label="Photographs from Vidyanjali of Bihar educational programs" class="hero-photo">
+<div class="slide-frame" id="slide-frame">
+<img alt="Participants at the School Leadership Program 2026" class="slide active" fetchpriority="high" src="leadership-participants.jpg"/>
+<img alt="Speaker at the teacher training workshop" class="slide" loading="lazy" src="teacher-workshop.jpg"/>
+<img alt="Vidyanjali of Bihar teacher training workshop banner" class="slide" loading="lazy" src="workshop-banner.jpg"/>
+<div aria-live="polite" class="slide-caption" id="slide-caption">School Leadership Program 2026</div>
+</div>
+<div aria-label="Photo slideshow controls" class="slide-controls">
+<button aria-label="Previous photograph" id="prev-slide" type="button">‹</button>
+<button aria-label="Show photograph 1" aria-pressed="true" class="dot active" data-slide="0" type="button"></button>
+<button aria-label="Show photograph 2" aria-pressed="false" class="dot" data-slide="1" type="button"></button>
+<button aria-label="Show photograph 3" aria-pressed="false" class="dot" data-slide="2" type="button"></button>
+<button aria-label="Next photograph" id="next-slide" type="button">›</button>
+<button aria-label="Pause slideshow" id="toggle-slide" type="button">Ⅱ</button>
+</div>
+</div></div>
 </section>
 <div class="pillars"><div class="wrap grid four">
- <article class="card"><div class="symbol">📚</div><h3>Better Education</h3><p>Encouraging quality learning and brighter futures.</p></article>
- <article class="card"><div class="symbol">👩‍🏫</div><h3>Empowered Teachers</h3><p>Supporting teacher development and strong classrooms.</p></article>
- <article class="card"><div class="symbol">🏫</div><h3>Stronger Schools</h3><p>Promoting school leadership and sustainable improvement.</p></article>
- <article class="card"><div class="symbol">🤝</div><h3>Social Upliftment</h3><p>Working towards inclusive and equitable communities.</p></article>
+<article class="card"><div class="symbol">📚</div><h3>Better Education</h3><p>Encouraging quality learning and brighter futures.</p></article>
+<article class="card"><div class="symbol">👩‍🏫</div><h3>Empowered Teachers</h3><p>Supporting teacher development and strong classrooms.</p></article>
+<article class="card"><div class="symbol">🏫</div><h3>Stronger Schools</h3><p>Promoting school leadership and sustainable improvement.</p></article>
+<article class="card"><div class="symbol">🤝</div><h3>Social Upliftment</h3><p>Working towards inclusive and equitable communities.</p></article>
 </div></div>
 <section class="programs" id="programs">
- <div class="wrap"><h2 class="section-title">Our Programs</h2><p class="lead">Initiatives designed to support learning, strengthen educational institutions and encourage community participation.</p>
-  <div class="grid three">
-   <article class="card"><div class="symbol">🎯</div><h3>School Leadership Program</h3><p>Building better schools through better leadership, shared vision and practical school improvement.</p></article>
-   <article class="card"><div class="symbol">🧑‍🏫</div><h3>Teacher Training</h3><p>Encouraging professional development, modern pedagogy and teacher empowerment.</p></article>
-   <article class="card"><div class="symbol">📘</div><h3>RTE & NEP Awareness</h3><p>Promoting awareness of education rights and the goals of the National Education Policy.</p></article>
-   <article class="card"><div class="symbol">💻</div><h3>Education & Digital Literacy</h3><p>Supporting digital awareness and access to learning opportunities.</p></article>
-   <article class="card"><div class="symbol">🌱</div><h3>Community Awareness</h3><p>Encouraging participation in education and community development.</p></article>
-   <article class="card"><div class="symbol">✨</div><h3>Future Initiatives</h3><p>New programs will be shared here as they are planned and delivered.</p></article>
-  </div>
- </div>
+<div class="wrap"><h2 class="section-title">Our Programs</h2><p class="lead">Initiatives designed to support learning, strengthen educational institutions and encourage community participation.</p>
+<div class="grid three">
+<article class="card"><div class="symbol">🎯</div><h3>School Leadership Program</h3><p>Building better schools through better leadership, shared vision and practical school improvement.</p></article>
+<article class="card"><div class="symbol">🧑‍🏫</div><h3>Teacher Training</h3><p>Encouraging professional development, modern pedagogy and teacher empowerment.</p></article>
+<article class="card"><div class="symbol">📘</div><h3>RTE &amp; NEP Awareness</h3><p>Promoting awareness of education rights and the goals of the National Education Policy.</p></article>
+<article class="card"><div class="symbol">💻</div><h3>Education &amp; Digital Literacy</h3><p>Supporting digital awareness and access to learning opportunities.</p></article>
+<article class="card"><div class="symbol">🌱</div><h3>Community Awareness</h3><p>Encouraging participation in education and community development.</p></article>
+<article class="card"><div class="symbol">✨</div><h3>Future Initiatives</h3><p>New programs will be shared here as they are planned and delivered.</p></article>
+</div>
+</div>
 </section>
 <section class="about" id="about">
- <div class="wrap about-grid">
-  <div class="about-art"><div class="big">📖</div><h3>Education builds<br>a better tomorrow.</h3><p>Learning • Leadership • Opportunity</p></div>
-  <div class="about-copy"><h2 class="section-title">About Us</h2><p><strong>Vidyanjali of Bihar</strong> is an organization working towards transformation through education and social upliftment. We aim to help create opportunities, strengthen schools, support educators and contribute to a brighter future for children and communities.</p><p>Our focus includes educational awareness, school leadership, teacher empowerment and community participation, aligned with the broader goals of inclusive and quality education.</p><a class="btn blue" href="#contact">Connect With Us</a></div>
- </div>
+<div class="wrap about-grid">
+<div class="about-art"><div class="big">📖</div><h3>Education builds<br/>a better tomorrow.</h3><p>Learning • Leadership • Opportunity</p></div>
+<div class="about-copy">
+<h2 class="section-title">About Us</h2>
+<p><strong>Vidyanjali of Bihar</strong> is a registered public charitable trust based in Rohtas, Bihar, committed to promoting quality education, strengthening schools, empowering teachers and supporting inclusive community development.</p>
+<p>Our focus areas include educational awareness, school leadership, teacher development, digital and vocational skills, health and social welfare, women and child development, and environmental awareness.</p>
+<p>We work towards creating meaningful educational opportunities and supporting disadvantaged communities through learning, collaboration and charitable initiatives.</p>
+</div>
+</div>
+</section><section class="programs" id="vision-mission">
+<div class="wrap">
+<h2 class="section-title">Our Vision &amp; Mission</h2>
+<p class="lead">Guided by the charitable and educational objectives of our Trust.</p>
+<div class="grid three" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+<article class="card"><div class="symbol">🌟</div><h3>Our Vision</h3>
+<p>To build an inclusive and empowered society where quality education, equal opportunities and community participation enable every individual to achieve their potential.</p></article>
+<article class="card"><div class="symbol">🎯</div><h3>Our Mission</h3>
+<p>To promote quality education, strengthen school leadership, empower teachers, support underprivileged communities and advance social development through awareness, training, collaboration and charitable initiatives.</p></article>
+</div>
+</div>
+</section><section class="about" id="objectives">
+<div class="wrap">
+<h2 class="section-title">Our Objectives</h2>
+<p class="lead">Key areas of charitable and social development identified in the Trust's objectives.</p>
+<div class="grid three">
+<article class="card"><div class="symbol">📚</div><h3>Education &amp; Teacher Empowerment</h3><p>Support education, teacher development and awareness of RTE 2009 and NEP 2020.</p></article>
+<article class="card"><div class="symbol">🏫</div><h3>School Development</h3><p>Encourage better learning environments and educational support for schools.</p></article>
+<article class="card"><div class="symbol">🎓</div><h3>Student Support</h3><p>Promote educational opportunities and assistance for deserving and disadvantaged learners.</p></article>
+<article class="card"><div class="symbol">💻</div><h3>Skills &amp; Digital Literacy</h3><p>Encourage computer education, vocational training and employment-oriented skills.</p></article>
+<article class="card"><div class="symbol">🤝</div><h3>Health &amp; Social Welfare</h3><p>Advance health awareness, social welfare and community well-being.</p></article>
+<article class="card"><div class="symbol">🌱</div><h3>Women, Children &amp; Environment</h3><p>Support women and child development, environmental protection and community participation.</p></article>
+</div>
+</div>
 </section>
 <section id="activities">
- <div class="wrap"><h2 class="section-title">Our Activities</h2><p class="lead">We will share updates, photographs and reports from our programs as activities take place.</p>
-  <div class="grid three">
-   <article class="card"><div class="symbol">🏛️</div><h3>School Leadership</h3><p>Programs and discussions that encourage effective school leadership.</p></article>
-   <article class="card"><div class="symbol">🗣️</div><h3>Education Awareness</h3><p>Sharing information and encouraging dialogue around educational opportunities.</p></article>
-   <article class="card"><div class="symbol">📸</div><h3>News & Gallery</h3><p>Event photographs and verified activity reports can be added here.</p></article>
-  </div>
- </div>
+<div class="wrap"><h2 class="section-title">Our Activities</h2><p class="lead">We will share updates, photographs and reports from our programs as activities take place.</p>
+<div class="grid three">
+<article class="card"><div class="symbol">🏛️</div><h3>School Leadership</h3><p>Programs and discussions that encourage effective school leadership.</p></article>
+<article class="card"><div class="symbol">🗣️</div><h3>Education Awareness</h3><p>Sharing information and encouraging dialogue around educational opportunities.</p></article>
+<article class="card"><div class="symbol">📸</div><h3>News &amp; Gallery</h3><p>Event photographs and verified activity reports can be added here.</p></article>
+</div>
+</div>
 </section>
 <section class="about" id="team">
- <div class="wrap"><h2 class="section-title">Our Team</h2><p class="lead">Meet the people helping guide the organization’s work.</p>
-  <div class="grid three">
-   <article class="card team-card"><div class="avatar">👤</div><h3>Neelam Kumari</h3><p>CEO</p></article>
-   <article class="card team-card"><div class="avatar">👤</div><h3>Ram Krishna Pathak</h3><p>Secretary</p></article>
-   <article class="card team-card"><div class="avatar">🤝</div><h3>Join Our Effort</h3><p>Interested in supporting education? Contact us to learn more.</p></article>
-  </div>
-  <p class="note" style="text-align:center;margin-top:18px">Please verify names, designations and consent before publishing team information or photographs.</p>
- </div>
+<div class="wrap"><h2 class="section-title">Our Team</h2><p class="lead">Trust office-bearers as confirmed from the registration deed.</p>
+<div class="grid three"><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Yogendra Tiwari</h3><p>Chairman</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Raghvendra Ranjan</h3><p>Director</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Sunita Kumari</h3><p>Secretary</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Birendra Tiwari</h3><p>Patron</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Umesh Pandey</h3><p>Vice-Chairman</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Ram Krishna Pathak</h3><p>Treasurer</p></article></div>
+
+</div>
 </section>
 <section class="contact" id="contact">
- <div class="wrap"><h2 class="section-title">Contact Us</h2><p class="lead">For collaboration, educational initiatives or volunteering enquiries, get in touch.</p>
-  <div class="contact-grid">
-   <div class="contact-card"><h3>Vidyanjali of Bihar</h3><p>Village + PO Samardihan,<br>PS Sasaram, Rohtas, Bihar – 821113</p><p>Email: <a href="mailto:vidyanjaliofbihar@gmail.com">vidyanjaliofbihar@gmail.com</a></p></div>
-   <div class="contact-card"><h3>Support Our Mission</h3><p>Interested in collaborating, volunteering or learning about our work?</p><p><a href="mailto:vidyanjaliofbihar@gmail.com?subject=Enquiry%20for%20Vidyanjali%20of%20Bihar">Send us an email →</a></p><p class="tiny">Donation details should only be added after confirming the NGO’s legal and compliance requirements.</p></div>
-  </div>
- </div>
+<div class="wrap"><h2 class="section-title">Contact Us</h2><p class="lead">For collaboration, educational initiatives or volunteering enquiries, get in touch.</p>
+<div class="contact-grid">
+<div class="contact-card"><h3>Vidyanjali of Bihar</h3><p>Village + PO Samardihan,<br/>PS Sasaram, Rohtas, Bihar – 821113</p><p>Email: <a href="mailto:vidyanjaliofbihar@gmail.com">vidyanjaliofbihar@gmail.com</a></p>
+<p><strong>Registration:</strong> Public Charitable Trust<br/>
+Registered at District Registry Office, Rohtas (Sasaram), Bihar<br/>
+Registration / Serial No.: 9378  |  Deed No.: 26<br/>
+Registration Date: 16 June 2025</p>
+</div>
+<div class="contact-card"><h3>Support Our Mission</h3><p>Interested in collaborating, volunteering or learning about our work?</p><p><a href="mailto:vidyanjaliofbihar@gmail.com?subject=Enquiry%20for%20Vidyanjali%20of%20Bihar">Send us an email →</a></p><p class="tiny">Donation details should only be added after confirming the NGO’s legal and compliance requirements.</p></div>
+</div>
+</div>
 </section>
 </main>
-<footer><div class="wrap footer-row"><div><strong>Vidyanjali of Bihar</strong><br><span class="tiny">Transformation through Education</span></div><div>© <span id="year"></span> Vidyanjali of Bihar. All rights reserved.</div><div><a href="#home">Back to top ↑</a></div></div></footer>
+<footer><div class="wrap footer-row"><div><strong>Vidyanjali of Bihar</strong><br/><span class="tiny">Transformation through Education</span></div><div>© <span id="year"></span> Vidyanjali of Bihar. All rights reserved.</div><div><a href="#home">Back to top ↑</a></div></div></footer>
 <script>document.getElementById('year').textContent=new Date().getFullYear();document.querySelectorAll('nav a').forEach(a=>a.addEventListener('click',()=>document.querySelector('nav').classList.remove('open')));</script>
 <script>
 (()=>{const slides=[...document.querySelectorAll('.slide')],dots=[...document.querySelectorAll('.dot')],captions=['School Leadership Program 2026','Teacher Training Workshop — School Leadership','Teacher Training Workshop — 20 September 2026'];let current=0,paused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,timer;const toggle=document.getElementById('toggle-slide');function show(n){current=(n+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle('active',i===current));dots.forEach((d,i)=>{d.classList.toggle('active',i===current);d.setAttribute('aria-pressed',String(i===current))});document.getElementById('slide-caption').textContent=captions[current]}function restart(){clearInterval(timer);if(!paused)timer=setInterval(()=>show(current+1),6000)}document.getElementById('prev-slide').addEventListener('click',()=>{show(current-1);restart()});document.getElementById('next-slide').addEventListener('click',()=>{show(current+1);restart()});dots.forEach((d,i)=>d.addEventListener('click',()=>{show(i);restart()}));toggle.addEventListener('click',()=>{paused=!paused;toggle.textContent=paused?'▶':'Ⅱ';toggle.setAttribute('aria-label',paused?'Play slideshow':'Pause slideshow');restart()});if(paused){toggle.textContent='▶';toggle.setAttribute('aria-label','Play slideshow')}restart()})();
