@@ -27,6 +27,23 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 @media(max-width:560px){.four,.three,.contact-grid{grid-template-columns:1fr}.hero .wrap{grid-template-columns:1fr;padding:38px 0;gap:22px}.slide-frame{height:280px}.hero p{font-size:15px}section{padding:48px 0}.brand small{font-size:10px}.logo{width:48px;height:48px}}
 
 @media(max-width:560px){#vision-mission .grid{grid-template-columns:1fr!important}}
+
+
+.gallery-item{border:1px solid #dce5ed;background:#fff;border-radius:15px;padding:0;overflow:hidden;cursor:pointer;text-align:left;font:inherit;box-shadow:0 5px 18px #0b37600a}
+.gallery-item img{display:block;width:100%;height:235px;object-fit:cover}
+.gallery-item span{display:block;padding:13px 17px;font-weight:700;color:var(--navy)}
+.gallery-item:focus-visible,.lightbox-close:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+.gallery-lightbox[hidden]{display:none}
+.gallery-lightbox{position:fixed;inset:0;z-index:999;background:rgba(4,19,37,.94);display:flex;align-items:center;justify-content:center;padding:65px 20px 25px}
+.gallery-lightbox figure{margin:0;text-align:center;max-width:1100px;max-height:100%;color:white}
+.gallery-lightbox img{display:block;max-width:100%;max-height:75vh;object-fit:contain;margin:auto}
+.gallery-lightbox figcaption{margin-top:12px;font-weight:600}
+.lightbox-close{position:absolute;right:24px;top:14px;border:1px solid #ffffff80;border-radius:50%;color:white;background:#ffffff25;font-size:32px;cursor:pointer;width:46px;height:46px}
+@media(max-width:560px){#news .card[style]{grid-column:span 1!important}.gallery-item img{height:220px}}
+
+.gallery-category{display:block;color:#98711d;font-size:11px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
+.gallery-grid{align-items:stretch}
+.gallery-item{height:100%}
 </style>
 </head>
 <body>
@@ -35,7 +52,7 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <a aria-label="Vidyanjali of Bihar home" class="brand" href="#home"><img alt="Vidyanjali of Bihar official logo" class="logo" src="ngo-logo.jpg"/><span>Vidyanjali of Bihar<small>Transformation through Education</small></span></a>
 <button aria-label="Open navigation" class="menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
 <nav>
-<a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
+<a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#gallery">Gallery</a><a href="#news">News &amp; Events</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
 </nav>
 <a class="btn blue" href="#contact">Get in Touch</a>
 </div>
@@ -120,24 +137,70 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 </div>
 </section>
 <section id="activities">
-<div class="wrap"><h2 class="section-title">Our Activities</h2><p class="lead">We will share updates, photographs and reports from our programs as activities take place.</p>
+<div class="wrap">
+<h2 class="section-title">Our Activities</h2>
+<p class="lead">A look at educational initiatives and workshops conducted by Vidyanjali of Bihar.</p>
 <div class="grid three">
-<article class="card"><div class="symbol">🏛️</div><h3>School Leadership</h3><p>Programs and discussions that encourage effective school leadership.</p></article>
-<article class="card"><div class="symbol">🗣️</div><h3>Education Awareness</h3><p>Sharing information and encouraging dialogue around educational opportunities.</p></article>
-<article class="card"><div class="symbol">📸</div><h3>News &amp; Gallery</h3><p>Event photographs and verified activity reports can be added here.</p></article>
+<article class="card">
+<div class="symbol">🏫</div>
+<h3>School Leadership Program 2026</h3>
+<p><strong>20 September 2026 · SR Global School, Sasaram</strong></p>
+<p style="margin-top:10px">A teacher training and school leadership workshop focused on educational leadership, school governance and pedagogy.</p>
+</article>
+<article class="card"><div class="symbol">👩‍🏫</div><h3>Teacher Empowerment</h3><p>Supporting professional dialogue and capacity-building for educators through the School Leadership Program.</p></article>
+<article class="card"><div class="symbol">📸</div><h3>Event Documentation</h3><p>Explore authentic photographs from our educational workshop in the gallery below.</p><p style="margin-top:12px"><a href="#gallery" style="color:#24527a;font-weight:700">View Photo Gallery →</a></p></article>
 </div>
 </div>
 </section>
+<section class="about" id="gallery">
+<div class="wrap">
+<h2 class="section-title">Photo Gallery</h2>
+<p class="lead">Photographs from the School Leadership Program &amp; Teacher Training Workshop held on 20 September 2026 at SR Global School, Sasaram.</p>
+<div class="grid three gallery-grid"><button aria-label="Enlarge Inaugural Lamp-Lighting Ceremony" class="gallery-item" data-caption="Inaugural Lamp-Lighting Ceremony" data-full="gallery-01.jpg" type="button">
+<img alt="Inaugural Lamp-Lighting Ceremony" loading="lazy" src="gallery-01.jpg"/><span><small class="gallery-category">Inauguration</small>Inaugural Lamp-Lighting Ceremony</span></button><button aria-label="Enlarge Ceremonial Lamp Lighting" class="gallery-item" data-caption="Ceremonial Lamp Lighting" data-full="gallery-02.jpg" type="button">
+<img alt="Ceremonial Lamp Lighting" loading="lazy" src="gallery-02.jpg"/><span><small class="gallery-category">Inauguration</small>Ceremonial Lamp Lighting</span></button><button aria-label="Enlarge Interactive Leadership Session" class="gallery-item" data-caption="Interactive Leadership Session" data-full="gallery-03.jpg" type="button">
+<img alt="Interactive Leadership Session" loading="lazy" src="gallery-03.jpg"/><span><small class="gallery-category">Training Sessions</small>Interactive Leadership Session</span></button><button aria-label="Enlarge Leadership Workshop in Progress" class="gallery-item" data-caption="Leadership Workshop in Progress" data-full="gallery-04.jpg" type="button">
+<img alt="Leadership Workshop in Progress" loading="lazy" src="gallery-04.jpg"/><span><small class="gallery-category">Training Sessions</small>Leadership Workshop in Progress</span></button><button aria-label="Enlarge Leadership and School Management Discussion" class="gallery-item" data-caption="Leadership and School Management Discussion" data-full="gallery-05.jpg" type="button">
+<img alt="Leadership and School Management Discussion" loading="lazy" src="gallery-05.jpg"/><span><small class="gallery-category">Training Sessions</small>Leadership and School Management Discussion</span></button><button aria-label="Enlarge Resource Person Addressing Participants" class="gallery-item" data-caption="Resource Person Addressing Participants" data-full="gallery-06.jpg" type="button">
+<img alt="Resource Person Addressing Participants" loading="lazy" src="gallery-06.jpg"/><span><small class="gallery-category">Training Sessions</small>Resource Person Addressing Participants</span></button><button aria-label="Enlarge Workshop Inauguration Highlights" class="gallery-item" data-caption="Workshop Inauguration Highlights" data-full="gallery-07.jpg" type="button">
+<img alt="Workshop Inauguration Highlights" loading="lazy" src="gallery-07.jpg"/><span><small class="gallery-category">Inauguration</small>Workshop Inauguration Highlights</span></button><button aria-label="Enlarge Participants Taking Notes" class="gallery-item" data-caption="Participants Taking Notes" data-full="gallery-08.jpg" type="button">
+<img alt="Participants Taking Notes" loading="lazy" src="gallery-08.jpg"/><span><small class="gallery-category">Participant Engagement</small>Participants Taking Notes</span></button><button aria-label="Enlarge Participants at the Workshop" class="gallery-item" data-caption="Participants at the Workshop" data-full="gallery-09.jpg" type="button">
+<img alt="Participants at the Workshop" loading="lazy" src="gallery-09.jpg"/><span><small class="gallery-category">Participant Engagement</small>Participants at the Workshop</span></button><button aria-label="Enlarge Sample Participation Certificate" class="gallery-item" data-caption="Sample Participation Certificate" data-full="gallery-10.jpg" type="button">
+<img alt="Sample Participation Certificate" loading="lazy" src="gallery-10.jpg"/><span><small class="gallery-category">Certificate</small>Sample Participation Certificate</span></button></div>
+</div>
+</section>
+<section class="programs" id="news">
+<div class="wrap">
+<h2 class="section-title">News &amp; Events</h2>
+<p class="lead">Updates from our verified activities and announcements.</p>
+<div class="grid three">
+<article class="card" style="grid-column:span 2">
+<div class="eyebrow" style="letter-spacing:1px">PAST EVENT · 20 SEPTEMBER 2026</div>
+<h3>School Leadership Program &amp; Teacher Training Workshop</h3>
+<p>Vidyanjali of Bihar conducted a school leadership and teacher training workshop at SR Global School, Sasaram, with a focus on school governance, pedagogy and strengthening educational leadership.</p>
+<p style="margin-top:12px"><a href="#gallery" style="color:#24527a;font-weight:700">See Event Photos →</a></p>
+</article>
+<article class="card"><div class="symbol">📅</div><div class="eyebrow">UPCOMING · DATE TO BE ANNOUNCED</div><h3>Webinar on Issues Faced by Schools</h3><p>An upcoming online discussion on challenges faced by schools and possible practical solutions.</p><p style="margin-top:10px"><strong>Date &amp; time:</strong> To be announced</p><p><strong>Mode:</strong> Online</p><p>Speakers and registration details will be announced later.</p></article>
+</div>
+</div>
+</section>
+<div aria-label="Expanded gallery photograph" aria-modal="true" class="gallery-lightbox" hidden="" id="gallery-lightbox" role="dialog">
+<button aria-label="Close photograph" class="lightbox-close" type="button">×</button>
+<figure><img alt="" id="lightbox-image"/><figcaption id="lightbox-caption"></figcaption></figure>
+</div>
 <section class="about" id="team">
 <div class="wrap"><h2 class="section-title">Our Team</h2><p class="lead">Trust office-bearers as confirmed from the registration deed.</p>
 <div class="grid three"><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Yogendra Tiwari</h3><p>Chairman</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Raghvendra Ranjan</h3><p>Director</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Sunita Kumari</h3><p>Secretary</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Birendra Tiwari</h3><p>Patron</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Umesh Pandey</h3><p>Vice-Chairman</p></article><article class="card team-card"><div aria-hidden="true" class="avatar">👤</div><h3>Ram Krishna Pathak</h3><p>Treasurer</p></article></div>
-
 </div>
 </section>
 <section class="contact" id="contact">
 <div class="wrap"><h2 class="section-title">Contact Us</h2><p class="lead">For collaboration, educational initiatives or volunteering enquiries, get in touch.</p>
 <div class="contact-grid">
 <div class="contact-card"><h3>Vidyanjali of Bihar</h3><p>Village + PO Samardihan,<br/>PS Sasaram, Rohtas, Bihar – 821113</p><p>Email: <a href="mailto:vidyanjaliofbihar@gmail.com">vidyanjaliofbihar@gmail.com</a></p>
+<p><strong>Registration:</strong> Public Charitable Trust<br/>
+Registered at District Registry Office, Rohtas (Sasaram), Bihar<br/>
+Registration / Serial No.: 9378  |  Deed No.: 26<br/>
+Registration Date: 16 June 2025</p>
 </div>
 <div class="contact-card"><h3>Support Our Mission</h3><p>Interested in collaborating, volunteering or learning about our work?</p><p><a href="mailto:vidyanjaliofbihar@gmail.com?subject=Enquiry%20for%20Vidyanjali%20of%20Bihar">Send us an email →</a></p><p class="tiny">Donation details should only be added after confirming the NGO’s legal and compliance requirements.</p></div>
 </div>
@@ -149,5 +212,23 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <script>
 (()=>{const slides=[...document.querySelectorAll('.slide')],dots=[...document.querySelectorAll('.dot')],captions=['School Leadership Program 2026','Teacher Training Workshop — School Leadership','Teacher Training Workshop — 20 September 2026'];let current=0,paused=window.matchMedia('(prefers-reduced-motion: reduce)').matches,timer;const toggle=document.getElementById('toggle-slide');function show(n){current=(n+slides.length)%slides.length;slides.forEach((s,i)=>s.classList.toggle('active',i===current));dots.forEach((d,i)=>{d.classList.toggle('active',i===current);d.setAttribute('aria-pressed',String(i===current))});document.getElementById('slide-caption').textContent=captions[current]}function restart(){clearInterval(timer);if(!paused)timer=setInterval(()=>show(current+1),6000)}document.getElementById('prev-slide').addEventListener('click',()=>{show(current-1);restart()});document.getElementById('next-slide').addEventListener('click',()=>{show(current+1);restart()});dots.forEach((d,i)=>d.addEventListener('click',()=>{show(i);restart()}));toggle.addEventListener('click',()=>{paused=!paused;toggle.textContent=paused?'▶':'Ⅱ';toggle.setAttribute('aria-label',paused?'Play slideshow':'Pause slideshow');restart()});if(paused){toggle.textContent='▶';toggle.setAttribute('aria-label','Play slideshow')}restart()})();
 </script>
-</body>
+<script>
+(()=> {
+ const dialog=document.getElementById('gallery-lightbox');
+ const img=document.getElementById('lightbox-image');
+ const caption=document.getElementById('lightbox-caption');
+ const close=dialog.querySelector('.lightbox-close');
+ let previousFocus=null;
+ function hide(){dialog.hidden=true;document.body.style.overflow='';if(previousFocus)previousFocus.focus();}
+ document.querySelectorAll('.gallery-item').forEach(button=>button.addEventListener('click',()=>{
+   previousFocus=document.activeElement;
+   img.src=button.dataset.full;img.alt=button.querySelector('img').alt;
+   caption.textContent=button.dataset.caption;
+   dialog.hidden=false;document.body.style.overflow='hidden';close.focus();
+ }));
+ close.addEventListener('click',hide);
+ dialog.addEventListener('click',event=>{if(event.target===dialog)hide()});
+ document.addEventListener('keydown',event=>{if(!dialog.hidden){if(event.key==='Escape')hide();if(event.key==='Tab'){event.preventDefault();close.focus();}}});
+})();
+</script></body>
 </html>
