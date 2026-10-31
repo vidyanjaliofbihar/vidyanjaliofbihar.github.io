@@ -60,6 +60,26 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 @media(max-width:800px){.gallery-track .gallery-item{flex-basis:calc((100% - 16px)/2)}}
 @media(max-width:540px){.gallery-carousel{padding:0 29px}.gallery-track .gallery-item{flex-basis:100%}.gallery-track .gallery-item img{height:210px}.gallery-arrow{width:29px;height:40px}.gallery-prev{left:-2px}.gallery-next{right:-2px}}
 @media(prefers-reduced-motion:reduce){.gallery-track{scroll-behavior:auto}}
+
+.resources-section{background:#f4f8fc}
+.resources-toolbar{display:flex;gap:14px;justify-content:center;align-items:center;margin:0 auto 24px;max-width:800px}
+.resource-search{display:flex;align-items:center;gap:10px;flex:1;background:#fff;border:1px solid #d8e3ef;border-radius:12px;padding:0 14px;min-height:48px;color:#53677b}
+.resource-search input{width:100%;border:0;outline:0;font:inherit;color:#18324d;background:transparent}
+#resource-category{border:1px solid #d8e3ef;border-radius:12px;background:#fff;color:#18324d;font:inherit;padding:12px;max-width:240px;min-height:48px}
+.resources-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.resource-card{background:#fff;border:1px solid #e2ebf4;border-radius:15px;padding:22px;box-shadow:0 5px 18px #0b37600a;display:flex;flex-direction:column;gap:11px}
+.resource-card h3{margin:0;color:#142d50;font-size:18px;line-height:1.4}
+.resource-card p{margin:0;color:#53677b;font-size:13px;line-height:1.5}
+.resource-card .resource-tag{font-size:11px;font-weight:800;letter-spacing:.6px;color:#9c7826;text-transform:uppercase}
+.resource-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:8px}
+.resource-actions a{display:inline-flex;align-items:center;justify-content:center;padding:9px 13px;border-radius:8px;background:#142d50;color:white;font-size:13px;font-weight:700}
+.resource-actions a:last-child{background:#f1e5c9;color:#142d50}
+.resources-empty{max-width:590px;margin:0 auto;text-align:center;padding:32px 24px;border:1px dashed #bdccdd;border-radius:18px;background:white}
+.resources-empty h3{margin:8px 0;color:#142d50;font-size:22px}
+.resources-empty p{color:#53677b;margin:0;line-height:1.65}
+.resources-icon{font-size:42px}
+@media(max-width:900px){.resources-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.resources-toolbar{flex-direction:column;align-items:stretch}.resources-grid{grid-template-columns:1fr}#resource-category{max-width:none;width:100%}}
 </style>
 </head>
 <body>
@@ -68,7 +88,7 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <a aria-label="Vidyanjali of Bihar home" class="brand" href="#home"><img alt="Vidyanjali of Bihar official logo" class="logo" src="ngo-logo.jpg"/><span>Vidyanjali of Bihar<small>Transformation through Education</small></span></a>
 <button aria-label="Open navigation" class="menu" onclick="document.querySelector('nav').classList.toggle('open')">☰</button>
 <nav>
-<a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#gallery">Gallery</a><a href="#news">News &amp; Events</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
+<a href="#home">Home</a><a href="#about">About Us</a><a href="#programs">Our Programs</a><a href="#activities">Activities</a><a href="#gallery">Gallery</a><a href="#resources">Resources</a><a href="#news">News &amp; Events</a><a href="#team">Our Team</a><a href="#contact">Contact</a>
 </nav>
 <a class="btn blue" href="#contact">Get in Touch</a>
 </div>
@@ -200,6 +220,26 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 </div>
 </div>
 </section>
+<section class="resources-section" id="resources">
+<div class="wrap">
+<div class="eyebrow" style="text-align:center">LEARNING &amp; KNOWLEDGE</div>
+<h2 class="section-title">Resource Centre</h2>
+<p class="lead">Explore and download educational resources, training materials, reports and useful publications shared by Vidyanjali of Bihar.</p>
+<div class="resources-toolbar">
+<label class="resource-search"><span aria-hidden="true">⌕</span><input aria-label="Search resources" id="resource-search" placeholder="Search resources by title or topic…" type="search"/></label>
+<select aria-label="Filter resources by category" id="resource-category">
+<option value="all">All Categories</option><option value="Teacher Training">Teacher Training</option><option value="Education Policy">Education Policy</option><option value="Reports &amp; Publications">Reports &amp; Publications</option><option value="Guides &amp; Toolkits">Guides &amp; Toolkits</option><option value="Other Resources">Other Resources</option>
+</select>
+</div>
+<div aria-live="polite" class="resources-grid" id="resource-list"></div>
+<div class="resources-empty" id="resources-empty">
+<div aria-hidden="true" class="resources-icon">📚</div>
+<h3>Resources Coming Soon</h3>
+<p>Our digital resource library is being prepared. Educational PDFs and learning materials will be available here for free reading and download.</p>
+</div>
+</div>
+</section>
+
 <div aria-label="Expanded gallery photograph" aria-modal="true" class="gallery-lightbox" hidden="" id="gallery-lightbox" role="dialog">
 <button aria-label="Close photograph" class="lightbox-close" type="button">×</button>
 <figure><img alt="" id="lightbox-image"/><figcaption id="lightbox-caption"></figcaption></figure>
@@ -213,8 +253,12 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <div class="wrap"><h2 class="section-title">Contact Us</h2><p class="lead">For collaboration, educational initiatives or volunteering enquiries, get in touch.</p>
 <div class="contact-grid">
 <div class="contact-card"><h3>Vidyanjali of Bihar</h3><p>Village + PO Samardihan,<br/>PS Sasaram, Rohtas, Bihar – 821113</p><p>Email: <a href="mailto:vidyanjaliofbihar@gmail.com">vidyanjaliofbihar@gmail.com</a></p>
+<p><strong>Registration:</strong> Public Charitable Trust<br/>
+Registered at District Registry Office, Rohtas (Sasaram), Bihar<br/>
+Registration / Serial No.: 9378  |  Deed No.: 26<br/>
+Registration Date: 16 June 2025</p>
 </div>
-<div class="contact-card"><h3>Support Our Mission</h3><p>Interested in collaborating, volunteering or learning about our work?</p><p><a href="mailto:vidyanjaliofbihar@gmail.com?subject=Enquiry%20for%20Vidyanjali%20of%20Bihar">Send us an email →</a></p></div>
+<div class="contact-card"><h3>Support Our Mission</h3><p>Interested in collaborating, volunteering or learning about our work?</p><p><a href="mailto:vidyanjaliofbihar@gmail.com?subject=Enquiry%20for%20Vidyanjali%20of%20Bihar">Send us an email →</a></p><p class="tiny">Donation details should only be added after confirming the NGO’s legal and compliance requirements.</p></div>
 </div>
 </div>
 </section>
@@ -255,6 +299,42 @@ track.addEventListener('scroll',update,{passive:true});
 window.addEventListener('resize',update);
 track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();next.click();}if(e.key==='ArrowLeft'){e.preventDefault();prev.click();}});
 update();
+})();
+</script><script>
+(function(){
+const list=document.getElementById('resource-list');
+const empty=document.getElementById('resources-empty');
+const search=document.getElementById('resource-search');
+const category=document.getElementById('resource-category');
+let resources=[];
+function render(){
+  list.replaceChildren();
+  const term=search.value.trim().toLowerCase();
+  const filtered=resources.filter(r=>(category.value==='all'||r.category===category.value)&&
+    [r.title,r.description,r.category].join(' ').toLowerCase().includes(term));
+  empty.hidden=filtered.length>0;
+  empty.querySelector('h3').textContent=resources.length ? 'No matching resources' : 'Resources Coming Soon';
+  empty.querySelector('p').textContent=resources.length
+    ? 'Try another search or choose a different category.'
+    : 'Our digital resource library is being prepared. Educational PDFs and learning materials will be available here for free reading and download.';
+  for(const r of filtered){
+    if(typeof r.file!=='string'||!/^resources\/[a-zA-Z0-9_.-]+\.pdf$/i.test(r.file))continue;
+    const card=document.createElement('article');card.className='resource-card';
+    const tag=document.createElement('div');tag.className='resource-tag';tag.textContent=r.category||'Resource';
+    const title=document.createElement('h3');title.textContent=r.title||'Untitled resource';
+    const description=document.createElement('p');description.textContent=r.description||'';
+    const actions=document.createElement('div');actions.className='resource-actions';
+    const view=document.createElement('a');view.href=r.file;view.target='_blank';view.rel='noopener noreferrer';view.textContent='Read PDF';
+    const download=document.createElement('a');download.href=r.file;download.download='';download.textContent='Download';
+    actions.append(view,download);card.append(tag,title,description,actions);list.append(card);
+  }
+}
+Promise.resolve().then(()=>fetch('resources.json',{cache:'no-store'})).then(response=>{
+ if(!response.ok)throw new Error('Resource list unavailable');
+ return response.json();
+}).then(data=>{resources=Array.isArray(data)?data:[];render();})
+.catch(()=>{empty.querySelector('h3').textContent='Resources temporarily unavailable';empty.querySelector('p').textContent='Please try again later.';});
+search.addEventListener('input',render);category.addEventListener('change',render);
 })();
 </script></body>
 </html>
