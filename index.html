@@ -44,6 +44,22 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 .gallery-category{display:block;color:#98711d;font-size:11px;letter-spacing:.8px;text-transform:uppercase;margin-bottom:5px}
 .gallery-grid{align-items:stretch}
 .gallery-item{height:100%}
+
+
+/* Compact horizontal gallery carousel */
+.gallery-carousel{position:relative;padding:0 36px}
+.gallery-track{display:flex!important;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;align-items:stretch;padding:8px 3px 16px}
+.gallery-track::-webkit-scrollbar{display:none}
+.gallery-track .gallery-item{flex:0 0 calc((100% - 32px)/3);min-width:0;scroll-snap-align:start;height:auto}
+.gallery-track .gallery-item img{height:185px}
+.gallery-track .gallery-item span{font-size:13px;padding:11px 12px}
+.gallery-arrow{position:absolute;top:38%;transform:translateY(-50%);width:36px;height:44px;z-index:2;background:#122f4e;color:white;border:0;border-radius:9px;font-size:32px;cursor:pointer;line-height:1}
+.gallery-prev{left:-3px}.gallery-next{right:-3px}
+.gallery-arrow:disabled{opacity:.3;cursor:default}
+.gallery-hint{text-align:center;color:#64748b;font-size:13px;margin-top:5px}
+@media(max-width:800px){.gallery-track .gallery-item{flex-basis:calc((100% - 16px)/2)}}
+@media(max-width:540px){.gallery-carousel{padding:0 29px}.gallery-track .gallery-item{flex-basis:100%}.gallery-track .gallery-item img{height:210px}.gallery-arrow{width:29px;height:40px}.gallery-prev{left:-2px}.gallery-next{right:-2px}}
+@media(prefers-reduced-motion:reduce){.gallery-track{scroll-behavior:auto}}
 </style>
 </head>
 <body>
@@ -156,7 +172,7 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <div class="wrap">
 <h2 class="section-title">Photo Gallery</h2>
 <p class="lead">Photographs from the School Leadership Program &amp; Teacher Training Workshop held on 20 September 2026 at SR Global School, Sasaram.</p>
-<div class="grid three gallery-grid"><button aria-label="Enlarge Inaugural Lamp-Lighting Ceremony" class="gallery-item" data-caption="Inaugural Lamp-Lighting Ceremony" data-full="gallery-01.jpg" type="button">
+<div class="gallery-carousel"><button aria-controls="gallery-track" aria-label="Previous gallery photos" class="gallery-arrow gallery-prev" type="button">‹</button><div aria-label="School Leadership Program photo carousel" class="gallery-grid gallery-track" id="gallery-track" tabindex="0"><button aria-label="Enlarge Inaugural Lamp-Lighting Ceremony" class="gallery-item" data-caption="Inaugural Lamp-Lighting Ceremony" data-full="gallery-01.jpg" type="button">
 <img alt="Inaugural Lamp-Lighting Ceremony" loading="lazy" src="gallery-01.jpg"/><span><small class="gallery-category">Inauguration</small>Inaugural Lamp-Lighting Ceremony</span></button><button aria-label="Enlarge Ceremonial Lamp Lighting" class="gallery-item" data-caption="Ceremonial Lamp Lighting" data-full="gallery-02.jpg" type="button">
 <img alt="Ceremonial Lamp Lighting" loading="lazy" src="gallery-02.jpg"/><span><small class="gallery-category">Inauguration</small>Ceremonial Lamp Lighting</span></button><button aria-label="Enlarge Interactive Leadership Session" class="gallery-item" data-caption="Interactive Leadership Session" data-full="gallery-03.jpg" type="button">
 <img alt="Interactive Leadership Session" loading="lazy" src="gallery-03.jpg"/><span><small class="gallery-category">Training Sessions</small>Interactive Leadership Session</span></button><button aria-label="Enlarge Leadership Workshop in Progress" class="gallery-item" data-caption="Leadership Workshop in Progress" data-full="gallery-04.jpg" type="button">
@@ -166,7 +182,7 @@ section{padding:66px 0}.section-title{text-align:center;margin:0 0 10px;font-siz
 <img alt="Workshop Inauguration Highlights" loading="lazy" src="gallery-07.jpg"/><span><small class="gallery-category">Inauguration</small>Workshop Inauguration Highlights</span></button><button aria-label="Enlarge Participants Taking Notes" class="gallery-item" data-caption="Participants Taking Notes" data-full="gallery-08.jpg" type="button">
 <img alt="Participants Taking Notes" loading="lazy" src="gallery-08.jpg"/><span><small class="gallery-category">Participant Engagement</small>Participants Taking Notes</span></button><button aria-label="Enlarge Participants at the Workshop" class="gallery-item" data-caption="Participants at the Workshop" data-full="gallery-09.jpg" type="button">
 <img alt="Participants at the Workshop" loading="lazy" src="gallery-09.jpg"/><span><small class="gallery-category">Participant Engagement</small>Participants at the Workshop</span></button><button aria-label="Enlarge Sample Participation Certificate" class="gallery-item" data-caption="Sample Participation Certificate" data-full="gallery-10.jpg" type="button">
-<img alt="Sample Participation Certificate" loading="lazy" src="gallery-10.jpg"/><span><small class="gallery-category">Certificate</small>Sample Participation Certificate</span></button></div>
+<img alt="Sample Participation Certificate" loading="lazy" src="gallery-10.jpg"/><span><small class="gallery-category">Certificate</small>Sample Participation Certificate</span></button></div><button aria-controls="gallery-track" aria-label="Next gallery photos" class="gallery-arrow gallery-next" type="button">›</button></div><p class="gallery-hint">Swipe or use the arrows to explore all 10 photographs. Click any photo to enlarge.</p>
 </div>
 </section>
 <section class="programs" id="news">
@@ -229,6 +245,20 @@ Registration Date: 16 June 2025</p>
  close.addEventListener('click',hide);
  dialog.addEventListener('click',event=>{if(event.target===dialog)hide()});
  document.addEventListener('keydown',event=>{if(!dialog.hidden){if(event.key==='Escape')hide();if(event.key==='Tab'){event.preventDefault();close.focus();}}});
+})();
+</script><script>
+(()=> {
+const track=document.getElementById('gallery-track');
+const prev=document.querySelector('.gallery-prev'),next=document.querySelector('.gallery-next');
+if(!track||!prev||!next)return;
+function step(){const card=track.querySelector('.gallery-item');return card?card.getBoundingClientRect().width+16:300;}
+function update(){prev.disabled=track.scrollLeft<=3;next.disabled=track.scrollLeft+track.clientWidth>=track.scrollWidth-3;}
+prev.addEventListener('click',()=>track.scrollBy({left:-step(),behavior:'smooth'}));
+next.addEventListener('click',()=>track.scrollBy({left:step(),behavior:'smooth'}));
+track.addEventListener('scroll',update,{passive:true});
+window.addEventListener('resize',update);
+track.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){e.preventDefault();next.click();}if(e.key==='ArrowLeft'){e.preventDefault();prev.click();}});
+update();
 })();
 </script></body>
 </html>
