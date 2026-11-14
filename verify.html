@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Membership Verification | Vidyanjali of Bihar</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f1f5f9;
+      color: #142b4c;
+      padding: 25px 15px;
+    }
+    .card {
+      max-width: 480px;
+      margin: 45px auto;
+      background: white;
+      border-radius: 18px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 8px 30px #142b4c15;
+    }
+    .logo { width: 95px; height: 95px; object-fit: contain; }
+    h1 { font-size: 23px; margin: 12px 0 5px; }
+    .tagline { color: #64748b; font-size: 13px; }
+    .divider { border-top: 1px solid #e2e8f0; margin: 24px 0; }
+    .status {
+      display: inline-block;
+      padding: 10px 18px;
+      border-radius: 30px;
+      font-weight: bold;
+      background: #dcfce7;
+      color: #166534;
+      margin-bottom: 15px;
+    }
+    .details { text-align: left; margin-top: 15px; }
+    .field { padding: 12px 0; border-bottom: 1px solid #edf2f7; }
+    .label { color: #64748b; font-size: 12px; margin-bottom: 5px; }
+    .value { font-size: 16px; font-weight: bold; overflow-wrap: anywhere; }
+    .message { margin-top: 15px; line-height: 1.6; }
+    .error { color: #b91c1c; }
+    .footer { font-size: 12px; color: #64748b; margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <img class="logo" src="ngo-logo.png" alt="Vidyanjali of Bihar Logo">
+    <h1>Vidyanjali of Bihar</h1>
+    <div class="tagline">Transformation through Education</div>
+
+    <div class="divider"></div>
+    <h2>Membership Verification</h2>
+
+    <div id="result" class="message" aria-live="polite">
+      Checking membership...
+    </div>
+
+    <div class="footer">
+      Official Membership Verification Portal
+      <br>vidyanjaliofbihar.com
+    </div>
+  </main>
+
+  <script>
+    async function verifyMember() {
+      const result = document.getElementById("result");
+      const params = new URLSearchParams(window.location.search);
+      const id = (params.get("id") || "").trim().toUpperCase();
+
+      if (!/^VOB-[0-9]{4}-[0-9]{4,}$/.test(id)) {
+        result.innerHTML =
+          '<p class="error">Invalid or missing Membership ID.</p>';
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          "https://iwlfhyadwukeyqskfjoq.supabase.co/rest/v1/rpc/verify_membership",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "apikey": "sb_publishable_yucuXDMfZYhzHIv_N8KEUg_bhnm6Ay3"
+            },
+            body: JSON.stringify({ p_membership_id: id })
+          }
+        );
+
+        if (!response.ok) throw new Error("Verification failed");
+
+        const data = await response.json();
+
+        if (!Array.isArray(data) || data.length === 0) {
+          result.innerHTML =
+            '<p class="error">Membership not verified.</p>' +
+            '<p>No approved membership was found for this ID.</p>';
+          return;
+        }
+
+        const member = data[0];
+
+        // Use textContent to safely display database values.
+        result.replaceChildren();
+
+        const status = document.createElement("div");
+        status.className = "status";
+        status.textContent = "✓ Active / Verified";
+        result.appendChild(status);
+
+        const details = document.createElement("div");
+        details.className = "details";
+
+        const fields = [
+          ["Member Name", member.member_name],
+          ["Membership ID", member.membership_id],
+          ["Issue Date", member.issue_date],
+          ["Membership Status", member.membership_status]
+        ];
+
+        for (const [label, value] of fields) {
+          const field = document.createElement("div");
+          field.className = "field";
+
+          const labelEl = document.createElement("div");
+          labelEl.className = "label";
+          labelEl.textContent = label;
+
+          const valueEl = document.createElement("div");
+          valueEl.className = "value";
+          valueEl.textContent = value || "N/A";
+
+          field.append(labelEl, valueEl);
+          details.appendChild(field);
+        }
+
+        result.appendChild(details);
+      } catch (error) {
+        result.innerHTML =
+          '<p class="error">Unable to verify membership right now.</p>' +
+          '<p>Please try again later.</p>';
+      }
+    }
+
+    verifyMember();
+  </script>
+</body>
+</html>
