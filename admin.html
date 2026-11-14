@@ -80,15 +80,72 @@
     <p id="message"></p>
   </div>
 
-  <script>
-    document.getElementById("loginForm")
-      .addEventListener("submit", function(event) {
-        event.preventDefault();
 
-        document.getElementById("message").textContent =
-          "Login integration is being configured.";
-      });
-  </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+  const SUPABASE_URL =
+    "https://iwlfhyadwukeyqskfjog.supabase.co";
+
+  const SUPABASE_KEY =
+    "sb_publishable_yucuXDMfZYhzHIv_N8KEUg_bhnm6Ay3";
+
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY
+  );
+
+  const form = document.getElementById("loginForm");
+  const message = document.getElementById("message");
+  const loginButton = form.querySelector("button");
+
+  form.addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    loginButton.disabled = true;
+    message.textContent = "Checking login credentials...";
+
+    try {
+      const { error: loginError } =
+        await db.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+      if (loginError) {
+        message.textContent = "Login failed: " + loginError.message;
+        return;
+      }
+
+      message.textContent = "Checking admin permission...";
+
+      const { data: isAdmin, error: adminError } =
+        await db.rpc("is_super_admin");
+
+      if (adminError || isAdmin !== true) {
+        await db.auth.signOut();
+        message.textContent = "Access denied. Super Admin only.";
+        return;
+      }
+
+      message.textContent =
+        "Login successful. Super Admin verified.";
+
+      // Dashboard integration will be added next.
+
+    } catch (error) {
+      message.textContent =
+        "Unable to complete login. Please try again.";
+      console.error("Login error:", error);
+    } finally {
+      loginButton.disabled = false;
+    }
+  });
+</script>
+
 
 </body>
 </html>
