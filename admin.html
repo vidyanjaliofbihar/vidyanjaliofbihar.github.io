@@ -632,7 +632,7 @@ if (application.application_status === "pending") {
   actionCell.appendChild(rejectBtn);
 
 } else {
-  actionCell.textContent = "Reviewed";
+  actionCell.appendChild(document.createTextNode(" Reviewed"));
 }
 
 row.appendChild(actionCell);
