@@ -235,6 +235,29 @@
         font-size: 22px;
       }
     }
+
+    
+/* Membership Photo Upload */
+
+.photo-help {
+  font-size: 12px;
+  color: #64748b;
+  margin: 6px 0 12px;
+}
+
+#photoPreviewContainer {
+  margin-top: 12px;
+}
+
+#photoPreview {
+  width: 120px;
+  height: 145px;
+  object-fit: cover;
+  border: 2px solid #d9e0e9;
+  border-radius: 6px;
+  background: #f8fafc;
+}
+
   </style>
 </head>
 
@@ -304,6 +327,36 @@
           <input id="email" name="email" type="email" maxlength="254">
         </div>
       </div>
+
+      
+<!-- Member Passport Size Photo -->
+<div class="field">
+  <label for="member_photo">
+    Passport Size Photograph
+    <span class="required">*</span>
+  </label>
+
+  <input
+    type="file"
+    id="member_photo"
+    name="member_photo"
+    accept="image/jpeg,image/png,image/webp"
+    required
+  >
+
+  <p class="photo-help">
+    Upload a recent passport size photograph.
+    Allowed formats: JPG, PNG, WebP.
+    Maximum original file size: 2 MB.
+  </p>
+
+  <div id="photoPreviewContainer" hidden>
+    <img
+      id="photoPreview"
+      alt="Selected member photograph preview"
+    >
+  </div>
+</div>
 
       <h3 class="section-title">2. Address Details</h3>
 
@@ -388,6 +441,115 @@
 
   let turnstileToken = "";
 
+  
+/* Step 39B.5 - Photo Preview and Compression */
+
+let compressedMemberPhoto = null;
+
+const photoInput = document.getElementById("member_photo");
+const photoPreview = document.getElementById("photoPreview");
+const photoPreviewContainer =
+  document.getElementById("photoPreviewContainer");
+
+function resetMemberPhoto() {
+  compressedMemberPhoto = null;
+  photoInput.value = "";
+  photoPreview.removeAttribute("src");
+  photoPreviewContainer.hidden = true;
+}
+
+async function compressMemberPhoto(file) {
+  const allowedTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp"
+  ];
+
+  if (!allowedTypes.includes(file.type)) {
+    throw new Error("Please select a JPG, PNG or WebP image.");
+  }
+
+  if (file.size > 2 * 1024 * 1024) {
+    throw new Error("Original photo must be 2 MB or smaller.");
+  }
+
+  const bitmap = await createImageBitmap(file);
+
+  try {
+    const maxWidth = 400;
+    const maxHeight = 500;
+
+    const scale = Math.min(
+      maxWidth / bitmap.width,
+      maxHeight / bitmap.height,
+      1
+    );
+
+    const width = Math.round(bitmap.width * scale);
+    const height = Math.round(bitmap.height * scale);
+
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+
+    const ctx = canvas.getContext("2d");
+
+    if (!ctx) {
+      throw new Error("Unable to process photo.");
+    }
+
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, width, height);
+    ctx.drawImage(bitmap, 0, 0, width, height);
+
+    const blob = await new Promise(resolve => {
+      canvas.toBlob(resolve, "image/jpeg", 0.75);
+    });
+
+    if (!blob) {
+      throw new Error("Photo compression failed.");
+    }
+
+    if (blob.size > 200 * 1024) {
+      throw new Error(
+        "Compressed photo is too large. Please choose another image."
+      );
+    }
+
+    return blob;
+
+  } finally {
+    bitmap.close();
+  }
+}
+
+photoInput.addEventListener("change", async function() {
+  compressedMemberPhoto = null;
+  photoPreviewContainer.hidden = true;
+
+  const file = photoInput.files?.[0];
+
+  if (!file) return;
+
+  try {
+    const blob = await compressMemberPhoto(file);
+
+    // Ignore results if the selected file changed meanwhile.
+    if (photoInput.files?.[0] !== file) return;
+
+    compressedMemberPhoto = blob;
+
+    const previewUrl = URL.createObjectURL(blob);
+    photoPreview.onload = () => URL.revokeObjectURL(previewUrl);
+    photoPreview.src = previewUrl;
+    photoPreviewContainer.hidden = false;
+
+  } catch (error) {
+    resetMemberPhoto();
+    showMessage(error.message, "error");
+  }
+});
+
   document.getElementById("year").textContent =
     new Date().getFullYear();
 
@@ -438,6 +600,15 @@
 
       if (!form.reportValidity()) return;
 
+      
+if (!compressedMemberPhoto) {
+  showMessage(
+    "Please select a valid passport size photograph.",
+    "error"
+  );
+  return;
+}
+
       if (!turnstileToken) {
         showMessage("Please complete CAPTCHA verification.", "error");
         return;
@@ -448,24 +619,41 @@
         return;
       }
 
+
       const data = Object.fromEntries(new FormData(form).entries());
 
-      data.consent_given =
-        document.getElementById("consent_given").checked;
+      
+const data = new FormData(form);
 
-      data.turnstile_token = turnstileToken;
+// Remove original photo and attach compressed JPEG.
+data.delete("member_photo");
+
+data.append(
+  "member_photo",
+  compressedMemberPhoto,
+  "member-photo.jpg"
+);
+
+data.set(
+  "consent_given",
+  String(
+    document.getElementById("consent_given").checked
+  )
+);
+
+data.set("turnstile_token", turnstileToken);
+
 
       button.disabled = true;
       button.textContent = "Submitting Application...";
 
       try {
-        const response = await fetch(FUNCTION_URL, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(data)
-        });
+        
+const response = await fetch(FUNCTION_URL, {
+  method: "POST",
+  body: data
+});
+
 
         const result = await response.json();
 
@@ -481,8 +669,11 @@
           "success"
         );
 
-        form.reset();
-        turnstileToken = "";
+        
+form.reset();
+resetMemberPhoto();
+turnstileToken = "";
+
         if (window.turnstile) turnstile.reset();
 
       } catch (error) {
