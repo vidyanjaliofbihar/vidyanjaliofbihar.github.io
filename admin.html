@@ -654,9 +654,28 @@ if (application.application_status === "pending") {
   actionCell.appendChild(approveBtn);
   actionCell.appendChild(rejectBtn);
 
+
+} else if (application.application_status === "approved") {
+
+  const idCardBtn = document.createElement("button");
+
+  idCardBtn.textContent = "Generate ID Card";
+  idCardBtn.type = "button";
+  idCardBtn.style.background = "#0f766e";
+  idCardBtn.style.width = "auto";
+  idCardBtn.style.margin = "3px";
+  idCardBtn.style.padding = "8px 12px";
+
+  idCardBtn.addEventListener("click", async () => {
+    await generateMemberIdCard(application.id);
+  });
+
+  actionCell.appendChild(idCardBtn);
+
 } else {
-  actionCell.appendChild(document.createTextNode(" Reviewed"));
+  actionCell.appendChild(document.createTextNode(" Rejected"));
 }
+
 
 row.appendChild(actionCell);
     
