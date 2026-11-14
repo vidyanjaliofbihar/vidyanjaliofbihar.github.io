@@ -1,0 +1,511 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Membership Registration | Vidyanjali of Bihar</title>
+  <meta name="description" content="Apply for membership of Vidyanjali of Bihar. Join our initiatives in education, teacher empowerment and community development.">
+
+  <link rel="icon" href="ngo-logo.jpg" type="image/jpeg">
+
+  <style>
+    :root {
+      --navy: #102b4e;
+      --gold: #c89c45;
+      --background: #f4f6fa;
+      --border: #d9e0e9;
+      --text: #263445;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--background);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      background: var(--navy);
+      color: white;
+      padding: 22px 15px;
+      text-align: center;
+    }
+
+    header img {
+      width: 78px;
+      height: 78px;
+      object-fit: contain;
+      border-radius: 50%;
+      background: white;
+      padding: 5px;
+    }
+
+    header h1 {
+      margin: 8px 0 0;
+      font-size: 26px;
+    }
+
+    header p {
+      margin: 3px 0;
+      color: #f1d79a;
+      font-size: 14px;
+    }
+
+    nav {
+      background: #09203c;
+      text-align: center;
+      padding: 11px;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      margin: 0 14px;
+      font-size: 14px;
+    }
+
+    nav a:hover {
+      color: var(--gold);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 35px auto;
+      padding: 0 16px;
+    }
+
+    .form-card {
+      background: white;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 5px 22px rgba(0,0,0,.07);
+    }
+
+    .heading {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .heading h2 {
+      color: var(--navy);
+      margin: 0;
+    }
+
+    .heading p {
+      color: #667085;
+      font-size: 14px;
+    }
+
+    .section-title {
+      color: var(--navy);
+      border-bottom: 2px solid var(--gold);
+      padding-bottom: 7px;
+      margin: 28px 0 18px;
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
+
+    .field {
+      margin-bottom: 16px;
+      min-width: 0;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      background: white;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(200,156,69,.35);
+      border-color: var(--gold);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 95px;
+    }
+
+    .required {
+      color: #bd2536;
+    }
+
+    .consent {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      margin: 22px 0;
+      font-size: 13px;
+    }
+
+    .consent input {
+      width: auto;
+      margin-top: 5px;
+    }
+
+    .captcha-area {
+      margin: 20px 0;
+      min-height: 65px;
+    }
+
+    .submit-btn {
+      width: 100%;
+      background: var(--navy);
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 7px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .submit-btn:hover {
+      background: #194572;
+    }
+
+    .submit-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .message {
+      display: none;
+      padding: 14px;
+      margin-top: 18px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    .success {
+      display: block;
+      color: #17603d;
+      background: #e8f6ee;
+    }
+
+    .error {
+      display: block;
+      color: #922c32;
+      background: #fdecee;
+    }
+
+    footer {
+      text-align: center;
+      background: var(--navy);
+      color: white;
+      padding: 22px;
+      font-size: 13px;
+      margin-top: 40px;
+    }
+
+    @media(max-width: 650px) {
+      .grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+
+      .form-card {
+        padding: 20px 16px;
+      }
+
+      header h1 {
+        font-size: 22px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <img src="ngo-logo.jpg" alt="Vidyanjali of Bihar Logo">
+  <h1>Vidyanjali of Bihar</h1>
+  <p>Transformation through Education</p>
+</header>
+
+<nav>
+  <a href="index.html">Home</a>
+  <a href="index.html#about">About Us</a>
+  <a href="index.html#contact">Contact</a>
+</nav>
+
+<main class="container">
+  <div class="form-card">
+
+    <div class="heading">
+      <h2>Membership Registration</h2>
+      <p>Join Vidyanjali of Bihar and contribute to educational transformation.</p>
+      <p>Fields marked * are mandatory.</p>
+    </div>
+
+    <form id="membershipForm">
+
+      <h3 class="section-title">1. Personal Information</h3>
+
+      <div class="grid">
+        <div class="field">
+          <label for="full_name">Full Name <span class="required">*</span></label>
+          <input id="full_name" name="full_name" maxlength="150" required>
+        </div>
+
+        <div class="field">
+          <label for="father_or_spouse_name">Father's / Spouse's Name</label>
+          <input id="father_or_spouse_name" name="father_or_spouse_name" maxlength="150">
+        </div>
+
+        <div class="field">
+          <label for="date_of_birth">Date of Birth</label>
+          <input type="date" id="date_of_birth" name="date_of_birth">
+        </div>
+
+        <div class="field">
+          <label for="gender">Gender</label>
+          <select id="gender" name="gender">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+            <option value="Prefer not to say">Prefer not to say</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="mobile">Mobile Number <span class="required">*</span></label>
+          <input id="mobile" name="mobile" type="tel"
+                 pattern="[6-9][0-9]{9}" maxlength="10"
+                 inputmode="numeric" required>
+        </div>
+
+        <div class="field">
+          <label for="email">Email Address</label>
+          <input id="email" name="email" type="email" maxlength="254">
+        </div>
+      </div>
+
+      <h3 class="section-title">2. Address Details</h3>
+
+      <div class="field">
+        <label for="address">Full Address <span class="required">*</span></label>
+        <textarea id="address" name="address" maxlength="500" required></textarea>
+      </div>
+
+      <div class="grid">
+        <div class="field">
+          <label for="district">District</label>
+          <input id="district" name="district" maxlength="100">
+        </div>
+
+        <div class="field">
+          <label for="state">State</label>
+          <input id="state" name="state" value="Bihar" maxlength="100">
+        </div>
+
+        <div class="field">
+          <label for="pincode">PIN Code</label>
+          <input id="pincode" name="pincode" maxlength="6"
+                 inputmode="numeric" pattern="[1-9][0-9]{5}">
+        </div>
+      </div>
+
+      <h3 class="section-title">3. Educational & Professional Details</h3>
+
+      <div class="grid">
+        <div class="field">
+          <label for="qualification">Educational Qualification</label>
+          <input id="qualification" name="qualification" maxlength="150">
+        </div>
+
+        <div class="field">
+          <label for="occupation">Occupation</label>
+          <input id="occupation" name="occupation" maxlength="150">
+        </div>
+      </div>
+
+      <h3 class="section-title">4. Membership Information</h3>
+
+      <div class="field">
+        <label for="reason_for_joining">Why do you want to join Vidyanjali of Bihar?</label>
+        <textarea id="reason_for_joining" name="reason_for_joining" maxlength="1000"></textarea>
+      </div>
+
+      <div class="consent">
+        <input type="checkbox" id="consent_given" required>
+        <label for="consent_given">
+          I confirm that the information provided is correct.
+          I consent to Vidyanjali of Bihar processing my information
+          for membership application and related communication.
+          <span class="required">*</span>
+        </label>
+      </div>
+
+      <div class="captcha-area">
+        <div id="turnstile-container"></div>
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">
+        Submit Membership Application
+      </button>
+
+      <div id="formMessage" class="message" role="status" aria-live="polite"></div>
+
+    </form>
+  </div>
+</main>
+
+<footer>
+  &copy; <span id="year"></span> Vidyanjali of Bihar.
+  All Rights Reserved.
+</footer>
+
+<script>
+  // Replace these two public configuration values.
+  // Never place a Turnstile secret or Supabase service-role key here.
+  const TURNSTILE_SITE_KEY = "0x4AAAAAAGAPxqFa2X6hw39g";
+  const FUNCTION_URL = "https://iwlfhyadwukeyqskfjoq.supabase.co/functions/v1/submit-membership";
+
+  let turnstileToken = "";
+
+  document.getElementById("year").textContent =
+    new Date().getFullYear();
+
+  function onCaptchaSuccess(token) {
+    turnstileToken = token;
+  }
+
+  function onCaptchaExpired() {
+    turnstileToken = "";
+  }
+
+  function onCaptchaError() {
+    turnstileToken = "";
+  }
+
+  function initializeTurnstile() {
+    if (
+      TURNSTILE_SITE_KEY.startsWith("PASTE_") ||
+      !window.turnstile
+    ) {
+      showMessage(
+        "CAPTCHA configuration is incomplete.",
+        "error"
+      );
+      return;
+    }
+
+    turnstile.render("#turnstile-container", {
+      sitekey: TURNSTILE_SITE_KEY,
+      callback: onCaptchaSuccess,
+      "expired-callback": onCaptchaExpired,
+      "error-callback": onCaptchaError
+    });
+  }
+
+  function showMessage(text, type) {
+    const message = document.getElementById("formMessage");
+    message.textContent = text;
+    message.className = "message " + type;
+  }
+
+  document.getElementById("membershipForm")
+    .addEventListener("submit", async function(event) {
+      event.preventDefault();
+
+      const form = event.currentTarget;
+      const button = document.getElementById("submitBtn");
+
+      if (!form.reportValidity()) return;
+
+      if (!turnstileToken) {
+        showMessage("Please complete CAPTCHA verification.", "error");
+        return;
+      }
+
+      if (FUNCTION_URL.startsWith("PASTE_")) {
+        showMessage("Submission endpoint is not configured.", "error");
+        return;
+      }
+
+      const data = Object.fromEntries(new FormData(form).entries());
+
+      data.consent_given =
+        document.getElementById("consent_given").checked;
+
+      data.turnstile_token = turnstileToken;
+
+      button.disabled = true;
+      button.textContent = "Submitting Application...";
+
+      try {
+        const response = await fetch(FUNCTION_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.success !== true) {
+          throw new Error(
+            result.error || "Unable to submit application."
+          );
+        }
+
+        showMessage(
+          "Your membership application has been submitted successfully. " +
+          "It is pending review and approval.",
+          "success"
+        );
+
+        form.reset();
+        turnstileToken = "";
+        if (window.turnstile) turnstile.reset();
+
+      } catch (error) {
+        showMessage(
+          error.message || "Something went wrong. Please try again.",
+          "error"
+        );
+
+        turnstileToken = "";
+        if (window.turnstile) turnstile.reset();
+
+      } finally {
+        button.disabled = false;
+        button.textContent = "Submit Membership Application";
+      }
+    });
+</script>
+
+<script
+  src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=initializeTurnstile"
+  async
+  defer>
+</script>
+
+</body>
+</html>
