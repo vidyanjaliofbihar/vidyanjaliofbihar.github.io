@@ -841,7 +841,6 @@ modal.dataset.applicationId = applicationId;
     // Prevent an older request from replacing a newer view
     if (modal.dataset.applicationId !== applicationId) return;
 
-    content.replaceChildren(grid);
     
 const photoSection = document.createElement("div");
 photoSection.className = "member-photo-section";
@@ -1012,25 +1011,6 @@ function header() {
   );
 }
 
-      pdf.setFillColor(...navy);
-      pdf.rect(0, 0, W, 15, "F");
-
-      pdf.setTextColor(255, 255, 255);
-      pdf.setFont("helvetica", "bold");
-      pdf.setFontSize(12);
-      pdf.text("VIDYANJALI OF BIHAR", W / 2, 7, {
-        align: "center"
-      });
-
-      pdf.setFont("helvetica", "normal");
-      pdf.setFontSize(6.5);
-      pdf.text(
-        "Transformation through Education",
-        W / 2,
-        11.5,
-        { align: "center" }
-      );
-    }
 
     // FRONT SIDE
     cardBackground();
