@@ -194,6 +194,7 @@ th { background: #f1f5f9; }
           <th>District</th>
           <th>Status</th>
           <th>Membership ID</th>
+          <th>Action</th>
         </tr>
       </thead>
       <tbody id="applicationsBody"></tbody>
@@ -325,6 +326,43 @@ async function loadApplications() {
       row.appendChild(cell);
     });
 
+
+    // Action buttons for pending applications
+const actionCell = document.createElement("td");
+
+if (application.application_status === "pending") {
+
+  const approveBtn = document.createElement("button");
+  approveBtn.textContent = "Approve";
+  approveBtn.style.background = "#15803d";
+  approveBtn.style.width = "auto";
+  approveBtn.style.margin = "3px";
+  approveBtn.style.padding = "8px 12px";
+
+  const rejectBtn = document.createElement("button");
+  rejectBtn.textContent = "Reject";
+  rejectBtn.style.background = "#b91c1c";
+  rejectBtn.style.width = "auto";
+  rejectBtn.style.margin = "3px";
+  rejectBtn.style.padding = "8px 12px";
+
+  approveBtn.addEventListener("click", async () => {
+    await reviewApplication(application.id, "approved");
+  });
+
+  rejectBtn.addEventListener("click", async () => {
+    await reviewApplication(application.id, "rejected");
+  });
+
+  actionCell.appendChild(approveBtn);
+  actionCell.appendChild(rejectBtn);
+
+} else {
+  actionCell.textContent = "Reviewed";
+}
+
+row.appendChild(actionCell);
+    
     tbody.appendChild(row);
   });
 
@@ -334,6 +372,61 @@ async function loadApplications() {
       : "No applications found.";
 }
 
+
+async function reviewApplication(applicationId, decision) {
+
+  if (!["approved", "rejected"].includes(decision)) {
+    alert("Invalid decision.");
+    return;
+  }
+
+  const action = decision === "approved" ? "APPROVE" : "REJECT";
+
+  const confirmed = confirm(
+    `Are you sure you want to ${action} this membership application?`
+  );
+
+  if (!confirmed) return;
+
+  const statusMessage =
+    document.getElementById("dashboardMessage");
+
+  statusMessage.textContent =
+    `Processing ${decision} request...`;
+
+  try {
+
+    const { data, error } = await db.rpc(
+      "review_membership_application",
+      {
+        p_application_id: applicationId,
+        p_decision: decision
+      }
+    );
+
+    if (error) {
+      throw error;
+    }
+
+    alert(
+      decision === "approved"
+        ? "Membership application approved successfully."
+        : "Membership application rejected successfully."
+    );
+
+    await loadApplications();
+
+  } catch (error) {
+
+    console.error("Review error:", error);
+
+    statusMessage.textContent =
+      "Unable to review application: " + error.message;
+
+    alert("Action failed: " + error.message);
+  }
+}
+  
 document.getElementById("logoutBtn")
   .addEventListener("click", async () => {
     const { error } = await db.auth.signOut();
