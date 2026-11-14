@@ -59,6 +59,77 @@
       margin-top: 15px;
       font-size: 14px;
     }
+
+
+.dashboard {
+  display: none;
+  width: 100%;
+  max-width: 1100px;
+  margin: 30px auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.dashboard-header h2 { margin-bottom: 5px; }
+
+.logout-btn {
+  width: auto;
+  padding: 11px 22px;
+  background: #b91c1c;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 15px;
+  margin: 25px 0;
+}
+
+.stat-card {
+  background: white;
+  border-radius: 10px;
+  padding: 22px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.05);
+}
+
+.stat-card h3 {
+  font-size: 28px;
+  color: #102b50;
+  margin: 0 0 8px;
+}
+
+.stat-card p { margin: 0; }
+
+.table-container {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 650px;
+}
+
+th, td {
+  text-align: left;
+  padding: 13px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+th { background: #f1f5f9; }
+
+#dashboardMessage { color: #475569; }
+
+    
   </style>
 </head>
 <body>
@@ -81,6 +152,56 @@
   </div>
 
 
+<section id="dashboard" class="dashboard">
+  <div class="dashboard-header">
+    <div>
+      <h2>Vidyanjali of Bihar</h2>
+      <p>Super Admin Dashboard</p>
+    </div>
+    <button id="logoutBtn" class="logout-btn">
+      Logout
+    </button>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card">
+      <h3 id="totalCount">0</h3>
+      <p>Total Applications</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="pendingCount">0</h3>
+      <p>Pending</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="approvedCount">0</h3>
+      <p>Approved</p>
+    </div>
+    <div class="stat-card">
+      <h3 id="rejectedCount">0</h3>
+      <p>Rejected</p>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <h2>Membership Applications</h2>
+    <p id="dashboardMessage">Loading...</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Mobile</th>
+          <th>District</th>
+          <th>Status</th>
+          <th>Membership ID</th>
+        </tr>
+      </thead>
+      <tbody id="applicationsBody"></tbody>
+    </table>
+  </div>
+</section>
+
+  
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
@@ -135,6 +256,7 @@
         "Login successful. Super Admin verified.";
 
       // Dashboard integration will be added next.
+      await showDashboard();
 
     } catch (error) {
       message.textContent =
@@ -144,6 +266,87 @@
       loginButton.disabled = false;
     }
   });
+
+
+async function showDashboard() {
+  document.querySelector(".login-box").style.display = "none";
+  document.body.style.display = "block";
+  document.getElementById("dashboard").style.display = "block";
+
+  await loadApplications();
+}
+
+async function loadApplications() {
+  const statusMessage =
+    document.getElementById("dashboardMessage");
+
+  statusMessage.textContent = "Loading applications...";
+
+  const { data, error } = await db
+    .from("membership_applications")
+    .select("id, full_name, mobile, district, application_status, membership_id")
+    .order("applied_at", { ascending: false });
+
+  if (error) {
+    statusMessage.textContent =
+      "Unable to load applications: " + error.message;
+    return;
+  }
+
+  const applications = data || [];
+
+  document.getElementById("totalCount").textContent =
+    applications.length;
+
+  document.getElementById("pendingCount").textContent =
+    applications.filter(a => a.application_status === "pending").length;
+
+  document.getElementById("approvedCount").textContent =
+    applications.filter(a => a.application_status === "approved").length;
+
+  document.getElementById("rejectedCount").textContent =
+    applications.filter(a => a.application_status === "rejected").length;
+
+  const tbody = document.getElementById("applicationsBody");
+  tbody.replaceChildren();
+
+  applications.forEach(application => {
+    const row = document.createElement("tr");
+
+    [
+      application.full_name,
+      application.mobile,
+      application.district,
+      application.application_status,
+      application.membership_id
+    ].forEach(value => {
+      const cell = document.createElement("td");
+      cell.textContent = value ?? "-";
+      row.appendChild(cell);
+    });
+
+    tbody.appendChild(row);
+  });
+
+  statusMessage.textContent =
+    applications.length
+      ? `${applications.length} application(s) loaded.`
+      : "No applications found.";
+}
+
+document.getElementById("logoutBtn")
+  .addEventListener("click", async () => {
+    const { error } = await db.auth.signOut();
+
+    if (error) {
+      alert("Logout failed: " + error.message);
+      return;
+    }
+
+    window.location.reload();
+  });
+
+  
 </script>
 
 
