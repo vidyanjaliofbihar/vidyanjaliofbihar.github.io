@@ -283,6 +283,29 @@ th { background: #f1f5f9; }
   }
 }
 
+/* Step 39C - Private Member Photo */
+
+.member-photo-section {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.member-photo {
+  width: 130px;
+  height: 160px;
+  object-fit: contain;
+  background: #f8fafc;
+  border: 2px solid #c89c45;
+  border-radius: 8px;
+  padding: 4px;
+}
+
+.member-photo-status {
+  font-size: 13px;
+  color: #64748b;
+  margin-top: 8px;
+}
+
     
   </style>
 </head>
@@ -649,6 +672,51 @@ row.appendChild(actionCell);
 }
 
 
+async function loadPrivateMemberPhoto(photoPath, section, modal, applicationId) {
+  const status = document.createElement("p");
+  status.className = "member-photo-status";
+  status.textContent = "Loading member photo...";
+  section.appendChild(status);
+
+  if (!photoPath) {
+    status.textContent = "No photograph uploaded.";
+    return;
+  }
+
+  const { data, error } = await db.storage
+    .from("member-photos")
+    .download(photoPath);
+
+  if (
+    modal.hidden ||
+    modal.dataset.applicationId !== applicationId
+  ) {
+    return;
+  }
+
+  if (error || !data) {
+    status.textContent = "Unable to load member photo.";
+    console.error("Photo download error:", error);
+    return;
+  }
+
+  const imageUrl = URL.createObjectURL(data);
+  const image = document.createElement("img");
+
+  image.className = "member-photo";
+  image.alt = "Member passport photograph";
+
+  image.onload = () => URL.revokeObjectURL(imageUrl);
+  image.onerror = () => {
+    URL.revokeObjectURL(imageUrl);
+    status.textContent = "Unable to display member photo.";
+  };
+
+  image.src = imageUrl;
+  section.insertBefore(image, status);
+  status.textContent = "Member Photograph";
+}
+
 async function viewMemberDetails(applicationId) {
   const modal = document.getElementById("memberDetailsModal");
   const content = document.getElementById("memberDetailsContent");
@@ -752,6 +820,19 @@ modal.dataset.applicationId = applicationId;
     if (modal.dataset.applicationId !== applicationId) return;
 
     content.replaceChildren(grid);
+    
+const photoSection = document.createElement("div");
+photoSection.className = "member-photo-section";
+
+content.replaceChildren(photoSection, grid);
+
+await loadPrivateMemberPhoto(
+  data.photo_path,
+  photoSection,
+  modal,
+  applicationId
+);
+
 
   } catch (error) {
     if (modal.dataset.applicationId !== applicationId) return;
