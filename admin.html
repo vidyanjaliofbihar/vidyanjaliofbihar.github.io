@@ -912,6 +912,35 @@ async function generateMemberIdCard(applicationId) {
     }
 
     const { jsPDF } = window.jspdf;
+    
+const logoUrl = "https://vidyanjaliofbihar.com/ngo-logo.png";
+
+const logoData = await new Promise((resolve, reject) => {
+  const img = new Image();
+  img.crossOrigin = "anonymous";
+
+  img.onload = () => {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 500;
+      canvas.height = 500;
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img, 0, 0, 500, 500);
+
+      resolve(canvas.toDataURL("image/png"));
+    } catch (error) {
+      reject(error);
+    }
+  };
+
+  img.onerror = () => reject(
+    new Error("Unable to load NGO logo.")
+  );
+
+  img.src = logoUrl;
+});
+
 
     // CR80 landscape card: 85.6 x 53.98 mm
     const pdf = new jsPDF({
@@ -943,7 +972,46 @@ async function generateMemberIdCard(applicationId) {
       pdf.rect(1.2, 1.2, W - 2.4, H - 2.4);
     }
 
-    function header() {
+    
+function header() {
+  pdf.setFillColor(...navy);
+  pdf.rect(0, 0, W, 15, "F");
+
+  // Original NGO Logo
+  pdf.setFillColor(255, 255, 255);
+  pdf.circle(10, 7.5, 6.3, "F");
+
+  pdf.addImage(
+    logoData,
+    "PNG",
+    4,
+    1.5,
+    12,
+    12
+  );
+
+  pdf.setTextColor(255, 255, 255);
+  pdf.setFont("helvetica", "bold");
+  pdf.setFontSize(11);
+
+  pdf.text(
+    "VIDYANJALI OF BIHAR",
+    51,
+    7,
+    { align: "center" }
+  );
+
+  pdf.setFont("helvetica", "normal");
+  pdf.setFontSize(5.8);
+
+  pdf.text(
+    "Transformation through Education",
+    51,
+    11.5,
+    { align: "center" }
+  );
+}
+
       pdf.setFillColor(...navy);
       pdf.rect(0, 0, W, 15, "F");
 
