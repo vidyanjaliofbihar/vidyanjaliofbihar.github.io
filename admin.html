@@ -173,6 +173,116 @@ th { background: #f1f5f9; }
   }
 }
 
+
+/* Step 37B - Member Details Modal */
+
+.member-modal[hidden] {
+  display: none !important;
+}
+
+.member-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(15, 23, 42, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.member-modal-content {
+  background: #ffffff;
+  width: 100%;
+  max-width: 750px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  padding: 25px;
+  box-shadow: 0 10px 35px rgba(0, 0, 0, 0.2);
+}
+
+.member-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.member-modal-header h2 {
+  color: #102b50;
+  font-size: 22px;
+  margin: 0;
+}
+
+.member-modal-close {
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  margin: 0;
+  background: #e2e8f0;
+  color: #102b50;
+  border-radius: 50%;
+  font-size: 26px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.member-modal-close:hover {
+  background: #cbd5e1;
+}
+
+.member-details-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+}
+
+.member-detail-item {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.member-detail-label {
+  font-size: 12px;
+  color: #64748b;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.member-detail-value {
+  font-size: 15px;
+  color: #102b50;
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .member-modal {
+    padding: 10px;
+  }
+
+  .member-modal-content {
+    padding: 18px;
+    max-height: 95vh;
+  }
+
+  .member-modal-header h2 {
+    font-size: 18px;
+  }
+
+  .member-details-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
     
   </style>
 </head>
@@ -261,6 +371,38 @@ th { background: #f1f5f9; }
     </table>
   </div>
 </section>
+
+
+<!-- Member Details Popup -->
+<div id="memberDetailsModal"
+     class="member-modal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="memberDetailsTitle"
+     hidden>
+
+  <div class="member-modal-content">
+
+    <div class="member-modal-header">
+      <h2 id="memberDetailsTitle">
+        Membership Application Details
+      </h2>
+
+      <button
+        type="button"
+        id="closeMemberDetails"
+        class="member-modal-close"
+        aria-label="Close member details">
+        &times;
+      </button>
+    </div>
+
+    <div id="memberDetailsContent">
+      <p>Loading member details...</p>
+    </div>
+
+  </div>
+</div>
 
   
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -445,6 +587,23 @@ window.allMembershipApplications = applications;
     // Action buttons for pending applications
 const actionCell = document.createElement("td");
 
+ 
+const viewBtn = document.createElement("button");
+
+viewBtn.textContent = "View Details";
+viewBtn.type = "button";
+viewBtn.style.background = "#102b50";
+viewBtn.style.width = "auto";
+viewBtn.style.margin = "3px";
+viewBtn.style.padding = "8px 12px";
+
+viewBtn.addEventListener("click", async () => {
+  await viewMemberDetails(application.id);
+});
+
+actionCell.appendChild(viewBtn);
+   
+    
 if (application.application_status === "pending") {
 
   const approveBtn = document.createElement("button");
@@ -489,6 +648,124 @@ row.appendChild(actionCell);
   filterMembershipApplications();
 }
 
+
+async function viewMemberDetails(applicationId) {
+  const modal = document.getElementById("memberDetailsModal");
+  const content = document.getElementById("memberDetailsContent");
+
+  if (!modal || !content) {
+    alert("Member details popup is not configured.");
+    return;
+  }
+
+  content.replaceChildren();
+  const loading = document.createElement("p");
+  loading.textContent = "Loading member details...";
+  content.appendChild(loading);
+
+modal.dataset.applicationId = applicationId;
+  
+  modal.hidden = false;
+
+  try {
+    const { data: isAdmin, error: adminError } =
+      await db.rpc("is_super_admin");
+
+    if (adminError || isAdmin !== true) {
+      throw new Error("Super Admin permission required.");
+    }
+
+    const { data, error } = await db
+      .from("membership_applications")
+      .select("*")
+      .eq("id", applicationId)
+      .single();
+
+    if (error) throw error;
+
+    if (!data) {
+      throw new Error("Application not found.");
+    }
+
+    // Labels for known membership fields
+    const fieldLabels = {
+      id: "Application ID",
+      full_name: "Full Name",
+      father_name: "Father's Name",
+      husband_name: "Husband's Name",
+      date_of_birth: "Date of Birth",
+      gender: "Gender",
+      mobile: "Mobile Number",
+      email: "Email Address",
+      address: "Address",
+      village: "Village",
+      district: "District",
+      state: "State",
+      pincode: "PIN Code",
+      qualification: "Qualification",
+      occupation: "Occupation",
+      application_status: "Application Status",
+      membership_id: "Membership ID",
+      applied_at: "Application Date",
+      approved_at: "Approval Date"
+    };
+
+    const excludedFields = new Set([
+      "password",
+      "password_hash",
+      "access_token",
+      "refresh_token",
+      "secret",
+      "secret_key"
+    ]);
+
+    const grid = document.createElement("div");
+    grid.className = "member-details-grid";
+
+    Object.entries(data).forEach(([key, value]) => {
+      if (excludedFields.has(key.toLowerCase())) return;
+
+      const item = document.createElement("div");
+      item.className = "member-detail-item";
+
+      const label = document.createElement("div");
+      label.className = "member-detail-label";
+      label.textContent = fieldLabels[key] ||
+        key.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+
+      const valueElement = document.createElement("div");
+      valueElement.className = "member-detail-value";
+
+      valueElement.textContent =
+        value === null || value === ""
+          ? "Not provided"
+          : typeof value === "object"
+            ? JSON.stringify(value)
+            : String(value);
+
+      item.appendChild(label);
+      item.appendChild(valueElement);
+      grid.appendChild(item);
+    });
+
+    // Prevent an older request from replacing a newer view
+    if (modal.dataset.applicationId !== applicationId) return;
+
+    content.replaceChildren(grid);
+
+  } catch (error) {
+    if (modal.dataset.applicationId !== applicationId) return;
+
+    content.replaceChildren();
+
+    const errorText = document.createElement("p");
+    errorText.textContent =
+      "Unable to load member details: " + error.message;
+
+    content.appendChild(errorText);
+  }
+}
+  
 
 async function reviewApplication(applicationId, decision) {
 
@@ -543,6 +820,34 @@ async function reviewApplication(applicationId, decision) {
     alert("Action failed: " + error.message);
   }
 }
+
+
+function closeMemberDetails() {
+  const modal = document.getElementById("memberDetailsModal");
+
+  modal.hidden = true;
+  delete modal.dataset.applicationId;
+}
+
+document.getElementById("closeMemberDetails")
+  .addEventListener("click", closeMemberDetails);
+
+document.getElementById("memberDetailsModal")
+  .addEventListener("click", event => {
+    if (event.target.id === "memberDetailsModal") {
+      closeMemberDetails();
+    }
+  });
+
+document.addEventListener("keydown", event => {
+  if (
+    event.key === "Escape" &&
+    !document.getElementById("memberDetailsModal").hidden
+  ) {
+    closeMemberDetails();
+  }
+});
+
   
 document.getElementById("logoutBtn")
   .addEventListener("click", async () => {
