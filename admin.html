@@ -130,6 +130,50 @@ th { background: #f1f5f9; }
 #dashboardMessage { color: #475569; }
 
     
+.member-filters {
+  display: flex;
+  gap: 15px;
+  margin: 20px 0;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.member-filters input,
+.member-filters select {
+  padding: 12px 14px;
+  border: 1px solid #ccd5e0;
+  border-radius: 7px;
+  background: #ffffff;
+  color: #102b50;
+  font-size: 14px;
+  margin: 0;
+}
+
+.member-filters input {
+  flex: 1;
+  min-width: 220px;
+}
+
+.member-filters select {
+  width: 190px;
+  max-width: 100%;
+  cursor: pointer;
+}
+
+@media (max-width: 600px) {
+  .member-filters {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .member-filters input,
+  .member-filters select {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+    
   </style>
 </head>
 <body>
@@ -184,6 +228,22 @@ th { background: #f1f5f9; }
 
   <div class="table-container">
     <h2>Membership Applications</h2>
+
+    <div class="member-filters">
+  <input
+    type="search"
+    id="memberSearch"
+    placeholder="Search name, mobile or membership ID"
+    aria-label="Search membership applications"
+  >
+
+  <select id="statusFilter" aria-label="Filter by application status">
+    <option value="all">All Applications</option>
+    <option value="pending">Pending</option>
+    <option value="approved">Approved</option>
+    <option value="rejected">Rejected</option>
+  </select>
+</div>
     <p id="dashboardMessage">Loading...</p>
 
     <table>
@@ -277,6 +337,57 @@ async function showDashboard() {
   await loadApplications();
 }
 
+
+function filterMembershipApplications() {
+  const search = document
+    .getElementById("memberSearch")
+    .value.trim().toLowerCase();
+
+  const status = document
+    .getElementById("statusFilter")
+    .value;
+
+  const applications =
+    window.allMembershipApplications || [];
+
+  const filtered = applications.filter(a => {
+    const searchText = [
+      a.full_name,
+      a.mobile,
+      a.membership_id
+    ].map(value => String(value ?? "").toLowerCase())
+     .join(" ");
+
+    const matchesSearch = searchText.includes(search);
+
+    const matchesStatus =
+      status === "all" ||
+      a.application_status === status;
+
+    return matchesSearch && matchesStatus;
+  });
+
+  document.querySelectorAll(
+    "#applicationsBody tr"
+  ).forEach(row => {
+    const application = applications.find(
+      a => a.id === row.dataset.applicationId
+    );
+
+    row.style.display =
+      application && filtered.some(a => a.id === application.id)
+        ? ""
+        : "none";
+  });
+}
+
+document.getElementById("memberSearch")
+  .addEventListener("input", filterMembershipApplications);
+
+document.getElementById("statusFilter")
+  .addEventListener("change", filterMembershipApplications);
+
+  
 async function loadApplications() {
   const statusMessage =
     document.getElementById("dashboardMessage");
@@ -295,6 +406,9 @@ async function loadApplications() {
   }
 
   const applications = data || [];
+  
+window.allMembershipApplications = applications;
+
 
   document.getElementById("totalCount").textContent =
     applications.length;
@@ -313,6 +427,7 @@ async function loadApplications() {
 
   applications.forEach(application => {
     const row = document.createElement("tr");
+    row.dataset.applicationId = application.id;
 
     [
       application.full_name,
@@ -370,6 +485,8 @@ row.appendChild(actionCell);
     applications.length
       ? `${applications.length} application(s) loaded.`
       : "No applications found.";
+
+  filterMembershipApplications();
 }
 
 
