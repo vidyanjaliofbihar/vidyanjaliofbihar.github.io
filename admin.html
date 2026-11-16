@@ -432,6 +432,7 @@ th { background: #f1f5f9; }
   
 
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.4/build/qrcode.min.js"></script>
 
 <script>
   const SUPABASE_URL =
@@ -1073,6 +1074,21 @@ function header() {
     pdf.setFillColor(...navy);
     pdf.rect(0, H - 2.5, W, 2.5, "F");
 
+    // Create a unique QR code linking to the live verification page.
+    if (!window.QRCode?.toDataURL) {
+      throw new Error("QR Code library is not loaded. Please refresh and try again.");
+    }
+
+    const verificationUrl = new URL(
+      "https://vidyanjaliofbihar.com/verify.html"
+    );
+    verificationUrl.searchParams.set("id", String(member.membership_id));
+
+    const qrData = await window.QRCode.toDataURL(
+      verificationUrl.toString(),
+      { errorCorrectionLevel: "M", margin: 2, width: 320 }
+    );
+
     // BACK SIDE
     pdf.addPage([85.6, 53.98], "landscape");
     cardBackground();
@@ -1080,44 +1096,46 @@ function header() {
 
     pdf.setTextColor(...navy);
     pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(9);
-    pdf.text("MEMBERSHIP INFORMATION", W / 2, 21, {
+    pdf.setFontSize(8);
+    pdf.text("MEMBERSHIP VERIFICATION", 31, 20.5, {
       align: "center"
     });
 
     pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(7.5);
-
-    pdf.text(
-      "This card identifies the holder as a member of",
-      W / 2,
-      28,
-      { align: "center" }
-    );
-
-    pdf.text(
-      "Vidyanjali of Bihar.",
-      W / 2,
-      32,
-      { align: "center" }
-    );
+    pdf.setFontSize(6.5);
+    pdf.text("This card identifies the holder as", 31, 27, {
+      align: "center"
+    });
+    pdf.text("a member of Vidyanjali of Bihar.", 31, 31, {
+      align: "center"
+    });
 
     pdf.setFont("helvetica", "bold");
-    pdf.text("Authorized Signatory", W / 2, 40, {
+    pdf.setFontSize(6.8);
+    pdf.text("Authorized Signatory", 31, 41, {
       align: "center"
     });
+
+    // Scannable QR code on the right side of the card.
+    pdf.setDrawColor(...gold);
+    pdf.setLineWidth(0.25);
+    pdf.roundedRect(59, 19, 24, 27.5, 1.5, 1.5);
+    pdf.addImage(qrData, "PNG", 60, 20, 22, 22);
+    pdf.setFont("helvetica", "bold");
+    pdf.setFontSize(5.4);
+    pdf.text("SCAN TO VERIFY", 71, 45, { align: "center" });
 
     pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(7);
-    pdf.text("vidyanjaliofbihar.com", W / 2, 46, {
+    pdf.setFontSize(6);
+    pdf.text("vidyanjaliofbihar.com", 31, 46, {
       align: "center"
     });
 
-    pdf.setFontSize(5.5);
+    pdf.setFontSize(5.2);
     pdf.text(
       "Not a government-issued identity document",
       W / 2,
-      50,
+      50.5,
       { align: "center" }
     );
 
