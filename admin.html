@@ -441,10 +441,20 @@ th { background: #f1f5f9; }
   const SUPABASE_KEY =
     "sb_publishable_yucuXDMfZYhzHIv_N8KEUg_bhnm6Ay3";
 
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY
-  );
+  
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY,
+  {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+      storage: window.localStorage
+    }
+  }
+);
+
 
   const form = document.getElementById("loginForm");
   const message = document.getElementById("message");
