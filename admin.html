@@ -508,6 +508,38 @@ const db = window.supabase.createClient(
   });
 
 
+async function restoreAdminSession() {
+  try {
+    const { data: { session }, error: sessionError } =
+      await db.auth.getSession();
+
+    if (sessionError || !session) {
+      return;
+    }
+
+    const { data: userData, error: userError } =
+      await db.auth.getUser();
+
+    if (userError || !userData.user) {
+      return;
+    }
+
+    const { data: isAdmin, error: adminError } =
+      await db.rpc("is_super_admin");
+
+    if (adminError || isAdmin !== true) {
+      return;
+    }
+
+    await showDashboard();
+
+  } catch (error) {
+    console.error("Session restore failed:", error);
+  }
+}
+
+restoreAdminSession();
+
 async function showDashboard() {
   document.querySelector(".login-box").style.display = "none";
   document.body.style.display = "block";
