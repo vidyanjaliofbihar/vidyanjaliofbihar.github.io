@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Membership Verification | Vidyanjali of Bihar</title>
+  <title>Certificate Verification | Vidyanjali of Bihar</title>
   <style>
     * { box-sizing: border-box; }
     body {
@@ -47,19 +47,19 @@
 </head>
 <body>
   <main class="card">
-    <img class="logo" src="ngo-logo.png" alt="Vidyanjali of Bihar Logo">
+    <img class="logo" src="ngo-logo.jpg" alt="Vidyanjali of Bihar Logo">
     <h1>Vidyanjali of Bihar</h1>
     <div class="tagline">Transformation through Education</div>
 
     <div class="divider"></div>
-    <h2>Membership Verification</h2>
+    <h2>Membership Certificate Verification</h2>
 
     <div id="result" class="message" aria-live="polite">
       Checking membership...
     </div>
 
     <div class="footer">
-      Official Membership Verification Portal
+      Official Membership Certificate Verification Portal
       <br>vidyanjaliofbihar.com
     </div>
   </main>
@@ -72,7 +72,7 @@
 
       if (!/^VOB-[0-9]{4}-[0-9]{4,}$/.test(id)) {
         result.innerHTML =
-          '<p class="error">Invalid or missing Membership ID.</p>';
+          '<p class="error">Invalid or missing Certificate / Membership ID.</p>';
         return;
       }
 
@@ -105,8 +105,8 @@ if (!response.ok) {
 
 if (!data.verified) {
   result.innerHTML =
-    '<p class="error">Membership not verified.</p>' +
-    '<p>No approved membership was found for this ID.</p>';
+    '<p class="error">Certificate not verified.</p>' +
+    '<p>No active membership certificate was found for this ID.</p>';
   return;
 }
 

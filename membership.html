@@ -419,10 +419,14 @@
       </div>
 
       <button type="submit" id="submitBtn" class="submit-btn">
-        Submit Membership Application
+        Register & Get Certificate
       </button>
 
       <div id="formMessage" class="message" role="status" aria-live="polite"></div>
+      <div id="certificateResult" hidden style="margin-top:18px;text-align:center;padding:20px;border:1px solid #c89c45;border-radius:10px;background:#fffaf0">
+        <strong>Membership Activated!</strong><p id="certificateNumber"></p>
+        <button type="button" id="downloadCertificate" class="submit-btn">Download Membership Certificate (PDF)</button>
+      </div>
 
     </form>
   </div>
@@ -440,6 +444,12 @@
   const FUNCTION_URL = "https://iwlfhyadwukeyqskfjoq.supabase.co/functions/v1/submit-membership";
 
   let turnstileToken = "";
+  let issuedCertificate = null;
+  document.getElementById("downloadCertificate").addEventListener("click", async () => {
+    if (!issuedCertificate) return;
+    try { await window.VOBCertificate.download(issuedCertificate); }
+    catch(e) { showMessage("Certificate download failed: " + e.message, "error"); }
+  });
 
   
 /* Step 39B.5 - Photo Preview and Compression */
@@ -642,7 +652,9 @@ data.set("turnstile_token", turnstileToken);
 
 
       button.disabled = true;
-      button.textContent = "Submitting Application...";
+      document.getElementById("certificateResult").hidden = true;
+      issuedCertificate = null;
+      button.textContent = "Registering Membership...";
 
       try {
         
@@ -660,11 +672,13 @@ const response = await fetch(FUNCTION_URL, {
           );
         }
 
-        showMessage(
-          "Your membership application has been submitted successfully. " +
-          "It is pending review and approval.",
-          "success"
-        );
+        if (!result.membership_id || !result.full_name || !result.issue_date) {
+          throw new Error("Registration response did not include certificate details. Please contact the NGO; do not submit again.");
+        }
+        issuedCertificate = {membership_id:result.membership_id, full_name:result.full_name, issue_date:result.issue_date};
+        document.getElementById("certificateNumber").textContent = "Certificate No.: " + result.membership_id;
+        document.getElementById("certificateResult").hidden = false;
+        showMessage("Membership registered successfully. Your certificate is ready for download.", "success");
 
         
 form.reset();
@@ -684,7 +698,7 @@ turnstileToken = "";
 
       } finally {
         button.disabled = false;
-        button.textContent = "Submit Membership Application";
+        button.textContent = "Register & Get Certificate";
       }
     });
 </script>
@@ -695,5 +709,8 @@ turnstileToken = "";
   defer>
 </script>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="membership-certificate.js"></script>
 </body>
 </html>

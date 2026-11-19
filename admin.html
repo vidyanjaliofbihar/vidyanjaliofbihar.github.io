@@ -343,35 +343,35 @@ th { background: #f1f5f9; }
   <div class="stats">
     <div class="stat-card">
       <h3 id="totalCount">0</h3>
-      <p>Total Applications</p>
+      <p>Total Registrations</p>
     </div>
     <div class="stat-card">
       <h3 id="pendingCount">0</h3>
-      <p>Pending</p>
+      <p>Legacy Pending</p>
     </div>
     <div class="stat-card">
       <h3 id="approvedCount">0</h3>
-      <p>Approved</p>
+      <p>Active Members</p>
     </div>
     <div class="stat-card">
       <h3 id="rejectedCount">0</h3>
-      <p>Rejected</p>
+      <p>Rejected / Revoked</p>
     </div>
   </div>
 
   <div class="table-container">
-    <h2>Membership Applications</h2>
+    <h2>Membership Records</h2>
 
     <div class="member-filters">
   <input
     type="search"
     id="memberSearch"
     placeholder="Search name, mobile or membership ID"
-    aria-label="Search membership applications"
+    aria-label="Search members"
   >
 
   <select id="statusFilter" aria-label="Filter by application status">
-    <option value="all">All Applications</option>
+    <option value="all">All Members</option>
     <option value="pending">Pending</option>
     <option value="approved">Approved</option>
     <option value="rejected">Rejected</option>
@@ -408,7 +408,7 @@ th { background: #f1f5f9; }
 
     <div class="member-modal-header">
       <h2 id="memberDetailsTitle">
-        Membership Application Details
+        Member Details
       </h2>
 
       <button
@@ -631,55 +631,30 @@ viewBtn.addEventListener("click", async () => {
 actionCell.appendChild(viewBtn);
    
     
-if (application.application_status === "pending") {
-
-  const approveBtn = document.createElement("button");
-  approveBtn.textContent = "Approve";
-  approveBtn.style.background = "#15803d";
-  approveBtn.style.width = "auto";
-  approveBtn.style.margin = "3px";
-  approveBtn.style.padding = "8px 12px";
-
-  const rejectBtn = document.createElement("button");
-  rejectBtn.textContent = "Reject";
-  rejectBtn.style.background = "#b91c1c";
-  rejectBtn.style.width = "auto";
-  rejectBtn.style.margin = "3px";
-  rejectBtn.style.padding = "8px 12px";
-
-  approveBtn.addEventListener("click", async () => {
-    await reviewApplication(application.id, "approved");
+if (application.application_status === "approved") {
+  const certBtn = document.createElement("button");
+  certBtn.textContent = "Download Certificate";
+  certBtn.type = "button";
+  certBtn.style.cssText = "background:#0f766e;width:auto;margin:3px;padding:8px 12px";
+  certBtn.addEventListener("click", async () => {
+    certBtn.disabled = true;
+    try {
+      const {data, error} = await db.from("membership_applications")
+        .select("full_name,membership_id,approved_at,applied_at,application_status")
+        .eq("id",application.id).single();
+      if(error) throw error;
+      if(!data || data.application_status !== "approved" || !data.membership_id) throw new Error("Not an active member");
+      await window.VOBCertificate.download({
+        full_name:data.full_name, membership_id:data.membership_id,
+        issue_date:data.approved_at || data.applied_at
+      });
+    } catch(e) { alert("Certificate download failed: " + e.message); }
+    finally {certBtn.disabled = false;}
   });
-
-  rejectBtn.addEventListener("click", async () => {
-    await reviewApplication(application.id, "rejected");
-  });
-
-  actionCell.appendChild(approveBtn);
-  actionCell.appendChild(rejectBtn);
-
-
-} else if (application.application_status === "approved") {
-
-  const idCardBtn = document.createElement("button");
-
-  idCardBtn.textContent = "Generate ID Card";
-  idCardBtn.type = "button";
-  idCardBtn.style.background = "#0f766e";
-  idCardBtn.style.width = "auto";
-  idCardBtn.style.margin = "3px";
-  idCardBtn.style.padding = "8px 12px";
-
-  idCardBtn.addEventListener("click", async () => {
-    await generateMemberIdCard(application.id);
-  });
-
-  actionCell.appendChild(idCardBtn);
-
+  actionCell.appendChild(certBtn);
 } else {
-  actionCell.appendChild(document.createTextNode(" Rejected"));
+  actionCell.appendChild(document.createTextNode(application.application_status === "pending" ? "Legacy pending record" : "Inactive"));
 }
-
 
 row.appendChild(actionCell);
     
@@ -870,377 +845,6 @@ await loadPrivateMemberPhoto(
 }
   
 
-async function generateMemberIdCard(applicationId) {
-  const button = Array.from(
-    document.querySelectorAll("#applicationsBody button")
-  ).find(btn =>
-    btn.textContent === "Generate ID Card" &&
-    btn.closest("tr")?.dataset.applicationId === applicationId
-  );
-
-  if (button) {
-    button.disabled = true;
-    button.textContent = "Generating...";
-  }
-
-  try {
-    const { data: isAdmin, error: adminError } =
-      await db.rpc("is_super_admin");
-
-    if (adminError || isAdmin !== true) {
-      throw new Error("Super Admin permission required.");
-    }
-
-    const { data: member, error } = await db
-      .from("membership_applications")
-      .select("full_name, membership_id, application_status, approved_at, photo_path")
-      .eq("id", applicationId)
-      .single();
-
-    if (error) throw error;
-
-    if (
-      !member ||
-      member.application_status !== "approved" ||
-      !member.membership_id
-    ) {
-      throw new Error("Only approved members can receive ID cards.");
-    }
-
-    if (!window.jspdf?.jsPDF) {
-      throw new Error("PDF library is not loaded.");
-    }
-
-    const { jsPDF } = window.jspdf;
-    
-const logoUrl = "https://vidyanjaliofbihar.com/ngo-logo.png";
-
-const logoData = await new Promise((resolve, reject) => {
-  const img = new Image();
-  img.crossOrigin = "anonymous";
-
-  img.onload = () => {
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = 500;
-      canvas.height = 500;
-
-      const ctx = canvas.getContext("2d");
-      ctx.drawImage(img, 0, 0, 500, 500);
-
-      resolve(canvas.toDataURL("image/png"));
-    } catch (error) {
-      reject(error);
-    }
-  };
-
-  img.onerror = () => reject(
-    new Error("Unable to load NGO logo.")
-  );
-
-  img.src = logoUrl;
-});
-
-
-    // CR80 landscape card: 85.6 x 53.98 mm
-    const pdf = new jsPDF({
-      orientation: "landscape",
-      unit: "mm",
-      format: [85.6, 53.98]
-    });
-
-    const W = 85.6;
-    const H = 53.98;
-
-    const navy = [16, 43, 80];
-    const gold = [200, 156, 69];
-
-    const issueDate = member.approved_at
-      ? new Date(member.approved_at).toLocaleDateString("en-GB", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric"
-        })
-      : "Not available";
-
-    function cardBackground() {
-      pdf.setFillColor(255, 255, 255);
-      pdf.rect(0, 0, W, H, "F");
-
-      pdf.setDrawColor(...gold);
-      pdf.setLineWidth(0.5);
-      pdf.rect(1.2, 1.2, W - 2.4, H - 2.4);
-    }
-
-    
-function header() {
-  pdf.setFillColor(...navy);
-  pdf.rect(0, 0, W, 15, "F");
-
-  // Original NGO Logo
-  pdf.setFillColor(255, 255, 255);
-  pdf.circle(10, 7.5, 6.3, "F");
-
-  pdf.addImage(
-    logoData,
-    "PNG",
-    4,
-    1.5,
-    12,
-    12
-  );
-
-  pdf.setTextColor(255, 255, 255);
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(11);
-
-  pdf.text(
-    "VIDYANJALI OF BIHAR",
-    51,
-    7,
-    { align: "center" }
-  );
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(5.8);
-
-  pdf.text(
-    "Transformation through Education",
-    51,
-    11.5,
-    { align: "center" }
-  );
-}
-
-
-    // FRONT SIDE
-    cardBackground();
-    header();
-
-    pdf.setTextColor(...navy);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(8);
-    pdf.text("MEMBERSHIP ID CARD", W / 2, 19, {
-      align: "center"
-    });
-
-    // Member photograph
-    if (member.photo_path) {
-      const { data: photo, error: photoError } =
-        await db.storage
-          .from("member-photos")
-          .download(member.photo_path);
-
-      if (photoError) throw photoError;
-
-      const photoData = await new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(
-          new Error("Unable to read member photograph.")
-        );
-        reader.readAsDataURL(photo);
-      });
-
-      pdf.addImage(photoData, "JPEG", 5, 22, 22, 27);
-    } else {
-      pdf.setDrawColor(...gold);
-      pdf.rect(5, 22, 22, 27);
-      pdf.setFontSize(7);
-      pdf.text("NO PHOTO", 16, 36, { align: "center" });
-    }
-
-    const name = String(member.full_name || "Member");
-    const nameLines = pdf.splitTextToSize(name, 49).slice(0, 2);
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(9);
-    pdf.setTextColor(...navy);
-    pdf.text(nameLines, 31, 28);
-
-    const detailsY = 30 + nameLines.length * 4;
-
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(7.5);
-
-    pdf.text("Member ID:", 31, detailsY);
-    pdf.setFont("helvetica", "bold");
-    pdf.text(String(member.membership_id), 47, detailsY);
-
-    pdf.setFont("helvetica", "normal");
-    pdf.text("Issue Date:", 31, detailsY + 6);
-    pdf.text(issueDate, 47, detailsY + 6);
-
-    pdf.setFillColor(...navy);
-    pdf.rect(0, H - 2.5, W, 2.5, "F");
-
-    // Generate QR using qrcodejs (which does not have QRCode.toDataURL).
-    if (typeof window.QRCode !== "function") {
-      throw new Error("QR Code library is not loaded. Please refresh and try again.");
-    }
-
-    const verificationUrl = new URL(
-      "https://vidyanjaliofbihar.com/verify.html"
-    );
-    verificationUrl.searchParams.set("id", String(member.membership_id));
-
-    const qrContainer = document.createElement("div");
-    qrContainer.style.position = "fixed";
-    qrContainer.style.left = "-9999px";
-    qrContainer.style.top = "0";
-    document.body.appendChild(qrContainer);
-    let qrData;
-    try {
-      new window.QRCode(qrContainer, {
-        text: verificationUrl.toString(),
-        width: 320,
-        height: 320,
-        colorDark: "#000000",
-        colorLight: "#ffffff",
-        correctLevel: window.QRCode.CorrectLevel.M
-      });
-      const qrCanvas = qrContainer.querySelector("canvas");
-      if (qrCanvas) {
-        qrData = qrCanvas.toDataURL("image/png");
-      } else {
-        const qrImage = qrContainer.querySelector("img");
-        if (!qrImage) throw new Error("QR image was not created.");
-        if (!qrImage.complete) {
-          await new Promise((resolve, reject) => {
-            qrImage.onload = resolve;
-            qrImage.onerror = () => reject(new Error("QR image failed to load."));
-          });
-        }
-        const canvas = document.createElement("canvas");
-        canvas.width = 320;
-        canvas.height = 320;
-        canvas.getContext("2d").drawImage(qrImage, 0, 0, 320, 320);
-        qrData = canvas.toDataURL("image/png");
-      }
-    } finally {
-      qrContainer.remove();
-    }
-
-    // BACK SIDE
-    pdf.addPage([85.6, 53.98], "landscape");
-    cardBackground();
-    header();
-
-    pdf.setTextColor(...navy);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(8);
-    pdf.text("MEMBERSHIP VERIFICATION", 31, 20.5, {
-      align: "center"
-    });
-
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(6.5);
-    pdf.text("This card identifies the holder as", 31, 27, {
-      align: "center"
-    });
-    pdf.text("a member of Vidyanjali of Bihar.", 31, 31, {
-      align: "center"
-    });
-
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(6.8);
-    pdf.text("Authorized Signatory", 31, 41, {
-      align: "center"
-    });
-
-    // Scannable QR code on the right side of the card.
-    pdf.setDrawColor(...gold);
-    pdf.setLineWidth(0.25);
-    pdf.roundedRect(59, 19, 24, 27.5, 1.5, 1.5);
-    pdf.addImage(qrData, "PNG", 60, 20, 22, 22);
-    pdf.setFont("helvetica", "bold");
-    pdf.setFontSize(5.4);
-    pdf.text("SCAN TO VERIFY", 71, 45, { align: "center" });
-
-    pdf.setFont("helvetica", "normal");
-    pdf.setFontSize(6);
-    pdf.text("vidyanjaliofbihar.com", 31, 46, {
-      align: "center"
-    });
-
-    pdf.setFontSize(5.2);
-    pdf.text(
-      "Not a government-issued identity document",
-      W / 2,
-      50.5,
-      { align: "center" }
-    );
-
-    pdf.save(
-      `VOB-ID-Card-${member.membership_id}.pdf`
-    );
-
-  } catch (error) {
-    console.error("ID Card generation error:", error);
-    alert("Unable to generate ID Card: " + error.message);
-  } finally {
-    if (button) {
-      button.disabled = false;
-      button.textContent = "Generate ID Card";
-    }
-  }
-}
-
-async function reviewApplication(applicationId, decision) {
-
-  if (!["approved", "rejected"].includes(decision)) {
-    alert("Invalid decision.");
-    return;
-  }
-
-  const action = decision === "approved" ? "APPROVE" : "REJECT";
-
-  const confirmed = confirm(
-    `Are you sure you want to ${action} this membership application?`
-  );
-
-  if (!confirmed) return;
-
-  const statusMessage =
-    document.getElementById("dashboardMessage");
-
-  statusMessage.textContent =
-    `Processing ${decision} request...`;
-
-  try {
-
-    const { data, error } = await db.rpc(
-      "review_membership_application",
-      {
-        p_application_id: applicationId,
-        p_decision: decision
-      }
-    );
-
-    if (error) {
-      throw error;
-    }
-
-    alert(
-      decision === "approved"
-        ? "Membership application approved successfully."
-        : "Membership application rejected successfully."
-    );
-
-    await loadApplications();
-
-  } catch (error) {
-
-    console.error("Review error:", error);
-
-    statusMessage.textContent =
-      "Unable to review application: " + error.message;
-
-    alert("Action failed: " + error.message);
-  }
-}
-
-
 function closeMemberDetails() {
   const modal = document.getElementById("memberDetailsModal");
 
@@ -1284,5 +888,6 @@ document.getElementById("logoutBtn")
 </script>
 
 
+<script src="membership-certificate.js"></script>
 </body>
 </html>
