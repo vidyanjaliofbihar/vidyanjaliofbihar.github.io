@@ -39,6 +39,56 @@
     fill(navy);pdf.triangle(0,0,67,0,0,22,'F');pdf.triangle(W,H,W-66,H,W,H-14,'F');
     stroke(gold);pdf.setLineWidth(.9);pdf.rect(5,5,W-10,H-10);
     stroke(navy);pdf.setLineWidth(.25);pdf.rect(7,7,W-14,H-14);
+
+    // Approved premium ornaments — drawn as vectors so PDF stays crisp at A4 size.
+    function ellipse(x,y,rx,ry,color,angle=0){
+      fill(color);pdf.ellipse(x,y,rx,ry,'F');
+    }
+    function laurel(cx,cy,side){
+      stroke(gold);pdf.setLineWidth(.45);
+      for(let i=0;i<8;i++){
+        const yy=cy+i*4.1, xx=cx+side*(Math.sin(i/8*Math.PI)*8);
+        if(i>0){const py=cy+(i-1)*4.1,px=cx+side*(Math.sin((i-1)/8*Math.PI)*8);pdf.line(px,py,xx,yy);}
+        const theta=(i%2===0?1:-1)*side;
+        ellipse(xx+theta*2.5,yy-1.2,2.8,1.1,gold);
+      }
+    }
+    // Gentle watermark: stylized open book, behind the recipient's name.
+    fill([249,246,238]);
+    pdf.triangle(75,114,139,106,144,140,'F');
+    pdf.triangle(153,140,158,106,222,114,'F');
+    stroke([242,235,219]);pdf.setLineWidth(.4);
+    pdf.line(148.5,112,148.5,141);
+    for(let i=0;i<3;i++){
+      pdf.line(89,118+i*5,138,112+i*5);
+      pdf.line(159,112+i*5,208,118+i*5);
+    }
+    // Upper corner botanical flourishes.
+    laurel(64,33,-1);laurel(233,33,1);
+    // Gold corner curls and ornamented inner borders.
+    stroke(gold);pdf.setLineWidth(.55);
+    for(const [x,y,sx,sy] of [[11,11,1,1],[286,11,-1,1],[11,199,1,-1],[286,199,-1,-1]]){
+      pdf.line(x,y,x+sx*10,y);pdf.line(x,y,x,y+sy*10);
+      pdf.circle(x+sx*3,y+sy*3,1.3,'S');
+    }
+    // Gold & navy swooping bands at the bottom edge (behind content).
+    fill(gold);pdf.triangle(0,185,0,210,118,210,'F');
+    fill(navy);pdf.triangle(0,193,0,210,95,210,'F');
+    fill(gold);pdf.triangle(297,185,297,210,178,210,'F');
+    fill(navy);pdf.triangle(297,193,297,210,202,210,'F');
+    // Premium gold medallion, intentionally not a representation of the official seal.
+    ellipse(137,172,14.5,14.5,[214,160,35]);
+    ellipse(137,172,12.2,12.2,[250,220,111]);
+    ellipse(137,172,10.2,10.2,[191,127,20]);
+    ellipse(137,172,8.8,8.8,[251,229,143]);
+    stroke([138,88,15]);pdf.setLineWidth(.5);
+    pdf.line(131.5,170,137,172);pdf.line(137,172,142.5,170);
+    pdf.line(131.5,170,131.5,176);pdf.line(142.5,170,142.5,176);
+    pdf.line(131.5,176,137,178);pdf.line(137,178,142.5,176);
+    // Small gold ornaments below title.
+    ellipse(148.5,96,1.6,1.6,gold);
+    ellipse(143.5,96,.75,.75,gold);ellipse(153.5,96,.75,.75,gold);
+
     pdf.addImage(logo,'PNG',W/2-13,8,26,27);
     txt('Vidyanjali of Bihar',W/2,49,29,'times','bold');
     txt('Transformation through Education.',W/2,58,12,'times','italic',[34,34,34]);
@@ -60,10 +110,10 @@
     const dateText=Number.isNaN(d.getTime())?String(member.issue_date):d.toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'});
     txt('Issue Date:',27,176,11,'times','bold',[30,30,30],'left');
     txt(dateText,57,176,12,'times','bold',navy,'left');
-    stroke(gold);pdf.setLineWidth(.6);pdf.line(119,150,119,186);pdf.line(228,150,228,186);
+    stroke(gold);pdf.setLineWidth(.6);pdf.line(118,151,118,186);pdf.line(229,151,229,186);
     // The images below are directly extracted from the uploaded original scan; never AI-redrawn.
     pdf.addImage(signature,'PNG',169,145,39,18);
-    pdf.addImage(stamp,'PNG',157,163,60,17);
+    pdf.addImage(stamp,'PNG',155.5,163,63,18);
     stroke(gold);pdf.setLineWidth(.35);pdf.line(159,181,216,181);
     txt('Yogendra Tiwari',187,188,11,'times','bold');
     txt('President',187,194,9,'times','normal');
