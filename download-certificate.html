@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Download Existing Membership Certificate | Vidyanjali of Bihar</title><link rel="icon" href="ngo-logo.jpg"><style>
+*{box-sizing:border-box}body{margin:0;background:#f4f6fa;color:#142b4e;font:16px Arial,sans-serif}header{background:#102b4e;color:#fff;text-align:center;padding:22px}header img{width:75px;height:75px;object-fit:contain;background:white;border-radius:50%;padding:4px}header h1{font-size:25px;margin:8px 0}main{max-width:650px;margin:38px auto;background:white;padding:30px;border-radius:14px;box-shadow:0 5px 24px #102b4e12}h2{margin-top:0}label{display:block;font-weight:bold;margin:18px 0 7px}input{width:100%;padding:13px;border:1px solid #b9c4d2;border-radius:6px;font:inherit}button{width:100%;margin-top:22px;padding:15px;background:#102b4e;color:white;border:0;border-radius:7px;font-weight:bold;font-size:16px;cursor:pointer}button:disabled{opacity:.6;cursor:wait}.hint{color:#526277;font-size:14px;line-height:1.5}.msg{margin-top:20px;padding:13px;border-radius:6px;display:none}.msg.error{display:block;background:#fff0f0;color:#a01818}.msg.success{display:block;background:#e8f6ee;color:#145c39}.captcha{margin-top:20px}footer{text-align:center;padding:20px;color:#526277}@media(max-width:700px){main{margin:16px;padding:22px}}</style></head>
+<body><header><img src="ngo-logo.jpg" alt="Vidyanjali of Bihar logo"><h1>Vidyanjali of Bihar</h1><div>Transformation through Education.</div></header>
+<main><h2>Download Existing Certificate</h2><p class="hint">Already registered? Enter your registered full name and mobile number to download your Membership Certificate.</p>
+<form id="lookup"><label for="name">Member Full Name</label><input id="name" name="name" maxlength="150" required autocomplete="name" placeholder="As entered during registration">
+<label for="mobile">Registered Mobile Number</label><input id="mobile" name="mobile" inputmode="numeric" pattern="[6-9][0-9]{9}" maxlength="10" required autocomplete="tel-national" placeholder="10-digit mobile number">
+<div class="captcha" id="turnstile"></div><button id="submit" type="submit">Find &amp; Download Certificate (PDF)</button></form><div id="msg" class="msg" role="status" aria-live="polite"></div>
+<p class="hint">This service does not use OTP. Anyone who knows both details may be able to retrieve the certificate. Never share your registration details unnecessarily.</p><p><a href="membership.html">New membership registration</a></p></main><footer>© 2026 Vidyanjali of Bihar</footer>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script><script src="membership-certificate.js"></script>
+<script>
+const ENDPOINT='https://iwlfhyadwukeyqskfjoq.supabase.co/functions/v1/download-member-certificate';
+const SITE_KEY='0x4AAAAAAGAPxqFa2X6hw39g';
+let widget=null;let captchaToken='';
+function initializeTurnstile(){widget=turnstile.render('#turnstile',{sitekey:SITE_KEY,callback:t=>{captchaToken=t},'expired-callback':()=>{captchaToken=''},'error-callback':()=>{captchaToken=''}})}
+function show(message,kind='error'){const el=document.getElementById('msg');el.textContent=message;el.className='msg '+kind}
+document.getElementById('lookup').addEventListener('submit',async e=>{
+ e.preventDefault();const btn=document.getElementById('submit');const name=document.getElementById('name').value.trim();const mobile=document.getElementById('mobile').value.trim();
+ if(!captchaToken){show('Complete CAPTCHA first.');return}
+ btn.disabled=true;btn.textContent='Checking membership…';
+ try{
+  const r=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({full_name:name,mobile,turnstile_token:captchaToken})});
+  const result=await r.json();if(!r.ok)throw new Error(result.error||'Certificate lookup failed');
+  if(!window.VOBCertificate?.download)throw new Error('Certificate generator not loaded');
+  await window.VOBCertificate.download({full_name:result.full_name,membership_id:result.membership_id,issue_date:result.issue_date});
+  show('Certificate downloaded successfully.','success');
+ }catch(err){show(err.message||'Unable to download certificate')}
+ finally{btn.disabled=false;btn.textContent='Find & Download Certificate (PDF)';captchaToken='';if(window.turnstile&&widget!==null)turnstile.reset(widget)}
+});
+</script><script src="https://challenges.cloudflare.com/turnstile/v0/api.js?onload=initializeTurnstile" async defer></script></body></html>
